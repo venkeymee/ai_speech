@@ -10,12 +10,18 @@ export class DataBaseConfig {
       constructor(){
         Logger.info("dbConfig:::constructor::connectionString::"+process.env.DB_CONNECTION);
         
-        this.sequelize = new Sequelize(process.env.DB_CONNECTION);
+        this.sequelize = new Sequelize('ai_speech', 'root', 'root', {
+          host: 'localhost',
+          dialect: 'mysql'// pick one of 'mysql','sqlite','postgres','mssql',
+        });
       }
    getConnection(){
        Logger.info("dbConfig:::GetConnection::connectionString::"+process.env.DB_CONNECTION);
 
-       this.sequelize=(this.sequelize)?this.sequelize:new Sequelize(process.env.DB_CONNECTION);
+       this.sequelize=(this.sequelize)?this.sequelize:new Sequelize('ai_speech', 'root', 'root', {
+        host: 'localhost',
+        dialect: 'mysql'// pick one of 'mysql','sqlite','postgres','mssql',
+      });;
         return this.sequelize;
    }
     async checkConnection(){
@@ -27,6 +33,7 @@ export class DataBaseConfig {
           Logger.error('⚡️ [DataBase]:Unable to connect to the database:', err);
         });
     }
+
    
 
 
