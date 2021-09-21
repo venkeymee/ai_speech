@@ -9,6 +9,8 @@ import Logger from './config/winstonlogger';
 import { DataBaseConfig } from './config/dbconfig';
 import Container from 'typedi';
 import audioConvert from './controller/audioConvert';
+ import userController from './controller/usercontroller';
+
 import fileUpload from 'express-fileupload';
 dotenv.config();
 const dbConnection=Container.get(DataBaseConfig);
@@ -34,6 +36,8 @@ app.use(fileUpload({
 
 
 app.use('/audio', audioConvert);
+app.use('/user', userController);
+
 
 
 

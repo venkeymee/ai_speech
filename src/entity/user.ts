@@ -2,7 +2,7 @@ import { DataTypes, Model } from "sequelize"
 import { Service } from "typedi";
 import { DataBaseConfig } from "../config/dbconfig";
 
-interface UserInstance extends Model {
+export interface UserInstance extends Model {
     id : number; // Note that the `null assertion` `!` is required in strict mode.
     firstname: string;
     lastname : string | null; // for nullable fields
@@ -16,7 +16,7 @@ interface UserInstance extends Model {
 export class User{
     public user;
     constructor(public dataBaseConfig:DataBaseConfig){
-        this.user=this.dataBaseConfig.sequelize.define<UserInstance>("user",
+        this.user=this.dataBaseConfig.sequelize.define<UserInstance>("users",
         {id: {
             type: DataTypes.INTEGER.UNSIGNED,
             autoIncrement: true,
