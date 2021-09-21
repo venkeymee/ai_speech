@@ -12,6 +12,7 @@ interface ICustomRequest extends express.Request {
 }
 import path from 'path';
 import fs, { mkdir, mkdirSync } from 'fs';
+import { User } from '../entity/user';
 
 /**
  * @TODO move this below const to const files or util file
@@ -20,6 +21,8 @@ export const CONST_PARAMS = {
     AUDIO_FILE_PATH: '../../ai_audios/'
 }
 
+
+const user = Container.get(User);
 
 const router = express.Router();
 
@@ -37,6 +40,8 @@ router.post('/upload_audio_file', async (req: ICustomRequest, res) => {
    
     uploadedfile.mv(filePath, (err) => {
         if (err) { return res.status(500).send(err); }
+
+        
         res.send({ status: 200, message: "fileuploaded successful.." });
 
     });
