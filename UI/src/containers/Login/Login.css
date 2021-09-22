@@ -1,0 +1,26 @@
+:root {
+    --container-background-image: './speechToText.jpg'
+}
+
+.container {
+    display: flex;
+    justify-content: center;
+    min-height: 100vh;
+    align-items: center;
+    background-image:  url('speechToText.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.LoginForm {
+    width: 40%;
+    border: 1px solid gray;
+    background-color: white;
+    border-radius: 20px;
+    padding: 20px;
+    box-shadow: 0px 0px 50px 5px darkslategrey;
+}
+
+.LoginForm > * {
+    padding: 10px;
+}

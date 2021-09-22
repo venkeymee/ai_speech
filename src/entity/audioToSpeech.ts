@@ -2,21 +2,28 @@ import { DataTypes, Model } from "sequelize"
 import { Service } from "typedi";
 import { DataBaseConfig } from "../config/dbconfig";
 
-interface Audio_To_Text_Speech extends Model {
+// interface Audio_To_Text_Speech extends Model {
+//     id : number; // Note that the `null assertion` `!` is required in strict mode.
+//     firstname: string;
+//     lastname : string | null; // for nullable fields
+//     email : string;
+//     password:string;
+//     address:string;
+// }
+export interface Audio_To_Text_Speech extends Model {
     id : number; // Note that the `null assertion` `!` is required in strict mode.
-    firstname: string;
-    lastname : string | null; // for nullable fields
-    email : string;
-    password:string;
-    address:string;
+    user_id: string;
+    wav_file_path : string; // for nullable fields
+    text_file_path : string;
+    status : number;
 }
   
 
 @Service()
 export class AudioToTextSpeech{
-    public user;
+    public audio;
     constructor(public dataBaseConfig:DataBaseConfig){
-        this.user=this.dataBaseConfig.sequelize.define<Audio_To_Text_Speech>("audio_to_text",
+        this.audio=this.dataBaseConfig.sequelize.define<Audio_To_Text_Speech>("audio_to_texts",
         {
           id: {
             type: DataTypes.INTEGER.UNSIGNED,
@@ -33,6 +40,11 @@ export class AudioToTextSpeech{
           },
           text_file_path: {
             type: new DataTypes.STRING(1500),
+            allowNull: false,
+          },
+          status: {
+            type: new DataTypes.INTEGER,
+            defaultValue : '0',
             allowNull: false,
           }
         })

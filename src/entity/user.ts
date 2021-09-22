@@ -9,6 +9,8 @@ export interface UserInstance extends Model {
     email : string;
     password:string;
     address:string;
+    status: number,
+    isAdmin : number
 }
   
 
@@ -40,6 +42,16 @@ export class User{
           },
           address: {
             type: new DataTypes.STRING(500),
+            allowNull: true,
+          },
+          status: {
+            type: new DataTypes.INTEGER,
+            defaultValue : '0',
+            allowNull: true,
+          },
+          isAdmin: {
+            type: new DataTypes.INTEGER,
+            defaultValue : '0',
             allowNull: true,
           }
         })

@@ -13,6 +13,8 @@ interface ICustomRequest extends express.Request {
 import path from 'path';
 import fs, { mkdir, mkdirSync } from 'fs';
 import { User } from '../entity/user';
+import { AudioServices } from '../services/audioConvertService';
+import responseMesg, { RESPONSEMSG, RESPONSESTATUS, RESPONSE_EMPTY_DATA } from '../responsemessages/responseMessages';
 
 /**
  * @TODO move this below const to const files or util file
@@ -22,11 +24,11 @@ export const CONST_PARAMS = {
 }
 
 
-const user = Container.get(User);
+const audioServices = Container.get(AudioServices);
 
 const router = express.Router();
 
-router.post('/upload_audio_file', async (req: ICustomRequest, res) => {
+router.post('/upload_audio_file', async (req:ICustomRequest, res) => {
     let uploadedfile;
     if (!req.files || Object.keys(req.files).length === 0) {
         return res.status(400).send('No files were uploaded.');
@@ -40,13 +42,22 @@ router.post('/upload_audio_file', async (req: ICustomRequest, res) => {
    
     uploadedfile.mv(filePath, (err) => {
         if (err) { return res.status(500).send(err); }
-
-        
         res.send({ status: 200, message: "fileuploaded successful.." });
 
     });
 
+    // const audio_file =  {
+    //     user_id: req.body.user_id,
+    //     wav_file_path :req.body.wav_file_path || '',
+    //     text_file_path : req.body.text_file_path || '',
+    //     status : req.body.status || '',
+    // }
 
+//     const result  = await audioServices.uploadTextFileorWaveFile(<any>audio_file);
+//     const response = (result instanceof Error)
+//         ? responseMesg(RESPONSESTATUS.EXCEPTION, RESPONSEMSG.EXCEPTION, RESPONSE_EMPTY_DATA)
+//         : responseMesg(RESPONSESTATUS.SUCCESS, RESPONSEMSG.RETRIVE_SUCCESS, result)
+//     return res.send(response);
 });
 
 export default router;
