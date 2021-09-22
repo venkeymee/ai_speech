@@ -18,7 +18,7 @@ export class UserService {
                 const res = await this.IUserModal.user.create(user);
                 return { user_id: res.dataValues.id, add_user: "success" };
             } else {
-                return "The Email already in use!";
+                return { status :508 ,data : "The Email already in use!"}
             }
         } catch (e) {
             return catchError(e, "userservice", "createUser")
@@ -26,7 +26,7 @@ export class UserService {
     };
     async loginUser(user: UserInstance) {
         try {
-            Logger.info(' user modal object::' + JSON.stringify(user));
+            // Logger.info(' user modal object::' + JSON.stringify(user));
             const checkemail = await this.constData.findUser({ email: user.email });
             if (checkemail && checkemail.dataValues && checkemail.dataValues.password) {
                 const passwordMatch = await bcrypt.compareSync(user.password, checkemail.dataValues.password);
@@ -34,10 +34,10 @@ export class UserService {
                     const theToken = generateToken(checkemail.dataValues.email);
                     return { user_id: checkemail.dataValues.id, accessToken: theToken };
                 } else {
-                    return "Invalid user credentials!";
+                    return { status :508 ,data : "Invalid user credentials!"};
                 }
             } else {
-                return "User does not exist!";
+                return { status :508 ,data : "User does not exist!"};
             }
         } catch (e) {
             return catchError(e, "userservice", "loginUser")
