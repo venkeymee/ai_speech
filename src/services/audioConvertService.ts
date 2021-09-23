@@ -36,7 +36,7 @@ export class audioConvertServices {
             if (res) {
                 return res.dataValues;
             } else {
-                return "audio is not exist";
+                return {status: 508, data : "audio is not exist"};
             }
         } catch (e) {
             return catchError(e, "audioConvertService", "findAudioById");
@@ -59,7 +59,7 @@ export class audioConvertServices {
                 const res = await this.IAudioToTextModal.audio.update(audio, { where: { id: audio.id } });
                 return (res[0] > 0) ? "success" : "failure";
             } else {
-                return"audio is not exist";
+                return {status: 508, data : "audio is not exist"};
             }
         } catch (e) {
             return catchError(e, "audioConvertService", "updateAudio");
