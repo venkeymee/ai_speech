@@ -46,7 +46,7 @@ export class audioConvertServices {
         try {
             // Logger.info(' audio modal object::' + JSON.stringify(audio));
             const res = await this.IAudioToTextModal.audio.destroy({ where: { id: audio } });
-            return (res > 0) ? "success" : "failure";
+            return (res > 0) ? {status: 508, data: "success"} : {status: 508, data: "failure"};
         } catch (e) {
             return catchError(e, "audioConvertService", "delteAudio");
         }
@@ -57,7 +57,7 @@ export class audioConvertServices {
             const findaudiobyid = await this.IAudioToTextModal.audio.findOne({where : {id: audio.id}});
             if (findaudiobyid.dataValues) {
                 const res = await this.IAudioToTextModal.audio.update(audio, { where: { id: audio.id } });
-                return (res[0] > 0) ? "success" : "failure";
+                return (res[0] > 0) ? {status: 508, data: "success"} : {status: 508, data: "failure"};
             } else {
                 return {status: 508, data : "audio is not exist"};
             }

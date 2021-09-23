@@ -2,7 +2,7 @@ import { where } from "sequelize/types";
 import { Service } from "typedi";
 import Logger from "../config/winstonlogger";
 import bcrypt from "bcryptjs";
-import { errJsonMsg, catchError, generateToken} from "../utility/constdata";
+import {  catchError, generateToken} from "../utility/constdata";
 import { User, UserInstance } from "../entity/user";
 
 @Service()
@@ -12,7 +12,7 @@ export class UserService {
 
     async createUser(user: UserInstance) {
         try {
-            Logger.info(' user modal object::' + JSON.stringify(user));
+            // Logger.info(' user modal object::' + JSON.stringify(user));
             const checkemail = await this.IUserModal.user.findOne({where : { email: user.email }});
             if (!(checkemail && checkemail.dataValues && checkemail.dataValues.email)) {
                 const res = await this.IUserModal.user.create(user);
@@ -32,7 +32,8 @@ export class UserService {
                 const passwordMatch = await bcrypt.compareSync(user.password, checkemail.dataValues.password);
                 if (passwordMatch) {
                     const theToken = generateToken(checkemail.dataValues.email);
-                    return { user_id: checkemail.dataValues.id, accessToken: theToken };
+                    // console.log("thevalues",Object.assign(checkemail.dataValues,theToken))
+                    return Object.assign(checkemail.dataValues,{accesToken : theToken});
                 } else {
                     return { status :508 ,data : "Invalid user credentials!"};
                 }
@@ -71,7 +72,7 @@ export class UserService {
         try {
             // Logger.info(' user modal object::' + JSON.stringify(user));
             const res = await this.IUserModal.user.destroy({ where: { id: user } });
-            return (res > 0) ? "success" : "failure";
+            return (res > 0) ? {status: 508, data: "success"} : {status: 508, data: "failure"};
         } catch (e) {
             return catchError(e, "userservice", "delteUser");
         }
@@ -82,7 +83,7 @@ export class UserService {
             const finduserbyid = await this.IUserModal.user.findOne({where : { email: user.email }});
             if (finduserbyid.dataValues) {
                 const res = await this.IUserModal.user.update(user, { where: { id: user.id } });
-                return (res[0] > 0) ? "success" : "failure";
+                return (res[0] > 0) ? {status: 508, data: "success"} : {status: 508, data: "failure"};
             } else {
                 return {status:508 ,data : "user is does not exist!"};
             }

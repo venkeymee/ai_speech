@@ -8,20 +8,20 @@ export enum  RESPONSESTATUS {
   export enum RESPONSEMSG{
       INSERT_SUCCESS="Record inserted successful.",
       UPDATE_SUCCESS="Updated successful.",
-      DELETE_SUCCESS="Delete successful.",
-      RETRIVE_SUCCESS="Operation Successful",
-      EXCEPTION='Exception while processing'
+      DELETE_SUCCESS="Deleted successful.",
+      RETRIVE_SUCCESS="Operation Successful.",
+      EXCEPTION='Exception while processing.' 
 
       
   }
 
  let responseMesg = (messageCode, message='',data={}) => {
     const httpStatusCode = {
-        SUCCESS: { status: 'SUCCESS',code: 200, message,data},
-        FAIL: { code: 500, status: 'INTERNEL SERVER ERROR', message,data},
-        INVALID: { status: "INVALID EMAIL ADDRESS", message,data },
-        EXCEPTION: { code:508, status:'FAILED',message,data},
-        AUTHENTICATION_FAIL: { code: 401, status: 'Authetication Error', message,data}
+        SUCCESS: { status: 200, message,data},
+        FAIL: { status: 500, message,data},
+        INVALID: { status: 404, message,data },
+        EXCEPTION: { status:508, message,data},
+        AUTHENTICATION_FAIL: { status: 401, message,data}
     }
     return httpStatusCode[messageCode];
 }

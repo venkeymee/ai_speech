@@ -15,7 +15,7 @@ import fs, { mkdir, mkdirSync } from 'fs';
 import { User } from '../entity/user';
 import { audioConvertServices } from '../services/audioConvertService';
 import responseMesg, { RESPONSEMSG, RESPONSESTATUS, RESPONSE_EMPTY_DATA } from '../responsemessages/responseMessages';
-import { apiResponse } from '../utility/constdata';
+import { apiResponses } from '../utility/constdata';
 
 /**
  * @TODO move this below const to const files or util file
@@ -75,24 +75,24 @@ router.get('/download', async (req, res) => {
 router.get('/audiobyid', async (req, res) => {
     const audio = req.query.id;
     const result = await audioConvertServicess.findAudioById(<any>audio)
-    return res.send(apiResponse(result,RESPONSEMSG.RETRIVE_SUCCESS));
+    return apiResponses(result,res,RESPONSEMSG.RETRIVE_SUCCESS);
 })
 
 router.get('/all-audios', async (req, res) => {
     const result = await audioConvertServicess.findAllAudios();
-    return res.send(apiResponse(result,RESPONSEMSG.RETRIVE_SUCCESS));
+    return apiResponses(result,res,RESPONSEMSG.RETRIVE_SUCCESS);
 })
 
 router.post('/delete-audio', async (req, res) => {
     const audio = req.body.id;
     const result = await audioConvertServicess.delteAudio(audio)
-    return res.send(apiResponse(result,RESPONSEMSG.DELETE_SUCCESS));
+    return apiResponses(result,res,RESPONSEMSG.DELETE_SUCCESS);
 })
 
 router.post('/update-audio', async (req, res) => {
     const audio = req.body;
     const result = await audioConvertServicess.updateAudio(audio)
-  return res.send(apiResponse(result,RESPONSEMSG.UPDATE_SUCCESS));  
+    return apiResponses(result,res,RESPONSEMSG.UPDATE_SUCCESS);  
 })
 
 

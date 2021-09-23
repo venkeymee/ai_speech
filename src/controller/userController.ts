@@ -12,6 +12,7 @@ import { UserService } from '../services/userservice';
 import bcrypt from "bcryptjs";
 import { validateLogin, validateRegister } from "../middlewars/uservallidations";
 import responseMesg, { RESPONSEMSG, RESPONSESTATUS, RESPONSE_EMPTY_DATA } from '../responsemessages/responseMessages';
+import { apiResponses } from '../utility/constdata';
 
 const userservice = Container.get(UserService);
 
@@ -29,64 +30,38 @@ router.post('/signup', validateRegister, async (req, res) => {
         address: req.body.address || '',
         status: req.body.status || ''
     } as UserInstance;
-    const result = await userservice.createUser(user);
-    if (result && result.status == 508) {
-        return res.send(responseMesg(RESPONSESTATUS.EXCEPTION, RESPONSEMSG.EXCEPTION, result.data));
-    } else {
-        const response = (result instanceof Error)
-            ? responseMesg(RESPONSESTATUS.EXCEPTION, RESPONSEMSG.EXCEPTION, RESPONSE_EMPTY_DATA)
-            : responseMesg(RESPONSESTATUS.SUCCESS, RESPONSEMSG.INSERT_SUCCESS, result)
-        return res.send(response);
-    }
+    const result: any = await userservice.createUser(user);
+    return apiResponses(result,res,RESPONSEMSG.INSERT_SUCCESS);
 });
 router.post('/login', validateLogin, async (req, res) => {
     const user = {
         email: req.body.email,
         password: req.body.password
     } as UserInstance;
-    const result = await userservice.loginUser(user);
-    if (result && result.status == 508) {
-        return res.send(responseMesg(RESPONSESTATUS.EXCEPTION, RESPONSEMSG.EXCEPTION, result.data));
-    } else {
-        const response = (result instanceof Error)
-            ? responseMesg(RESPONSESTATUS.EXCEPTION, RESPONSEMSG.EXCEPTION, RESPONSE_EMPTY_DATA)
-            : responseMesg(RESPONSESTATUS.SUCCESS, RESPONSEMSG.RETRIVE_SUCCESS, result)
-        return res.send(response);
-    }
+    const result: any = await userservice.loginUser(user);
+   return apiResponses(result,res,RESPONSEMSG.RETRIVE_SUCCESS);
 });
 
 router.get('/userbyid', async (req, res) => {
     const user = req.query.id;
     const result = await userservice.findUserById(<any>user)
-    const response = (result instanceof Error)
-        ? responseMesg(RESPONSESTATUS.EXCEPTION, RESPONSEMSG.EXCEPTION, RESPONSE_EMPTY_DATA)
-        : responseMesg(RESPONSESTATUS.SUCCESS, RESPONSEMSG.RETRIVE_SUCCESS, result)
-    return res.send(response);
+    return apiResponses(result,res,RESPONSEMSG.RETRIVE_SUCCESS);
 })
 
 router.get('/all-users', async (req, res) => {
     const result = await userservice.findAllusers();
-    const response = (result instanceof Error)
-        ? responseMesg(RESPONSESTATUS.EXCEPTION, RESPONSEMSG.EXCEPTION, RESPONSE_EMPTY_DATA)
-        : responseMesg(RESPONSESTATUS.SUCCESS, RESPONSEMSG.RETRIVE_SUCCESS, result)
-    return res.send(response);
+    return apiResponses(result,res,RESPONSEMSG.RETRIVE_SUCCESS);
 })
 
 router.post('/delete-user', async (req, res) => {
     const user = req.body.id;
     const result = await userservice.delteUser(user)
-    const response = (result instanceof Error)
-        ? responseMesg(RESPONSESTATUS.EXCEPTION, RESPONSEMSG.EXCEPTION, RESPONSE_EMPTY_DATA)
-        : responseMesg(RESPONSESTATUS.SUCCESS, RESPONSEMSG.DELETE_SUCCESS, result)
-    return res.send(response);
+    return apiResponses(result,res,RESPONSEMSG.DELETE_SUCCESS);
 })
 
 router.post('/update-user', async (req, res) => {
     const user = req.body;
     const result = await userservice.updateUser(user)
-    const response = (result instanceof Error)
-        ? responseMesg(RESPONSESTATUS.EXCEPTION, RESPONSEMSG.EXCEPTION, RESPONSE_EMPTY_DATA)
-        : responseMesg(RESPONSESTATUS.SUCCESS, RESPONSEMSG.UPDATE_SUCCESS, result)
-    return res.send(response);
+    return apiResponses(result,res,RESPONSEMSG.UPDATE_SUCCESS);
 })
 export default router;
