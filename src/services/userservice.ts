@@ -2,18 +2,18 @@ import { where } from "sequelize/types";
 import { Service } from "typedi";
 import Logger from "../config/winstonlogger";
 import bcrypt from "bcryptjs";
-import { constData, errJsonMsg, catchError, generateToken, userData } from "../utility/constdata";
+import { errJsonMsg, catchError, generateToken} from "../utility/constdata";
 import { User, UserInstance } from "../entity/user";
 
 @Service()
 export class UserService {
 
-    constructor(public IUserModal: User, public constData: constData) { }
+    constructor(public IUserModal: User) { }
 
     async createUser(user: UserInstance) {
         try {
             Logger.info(' user modal object::' + JSON.stringify(user));
-            const checkemail = await this.constData.findUser({ email: user.email });
+            const checkemail = await this.IUserModal.user.findOne({where : { email: user.email }});
             if (!(checkemail && checkemail.dataValues && checkemail.dataValues.email)) {
                 const res = await this.IUserModal.user.create(user);
                 return { user_id: res.dataValues.id, add_user: "success" };
@@ -27,7 +27,7 @@ export class UserService {
     async loginUser(user: UserInstance) {
         try {
             // Logger.info(' user modal object::' + JSON.stringify(user));
-            const checkemail = await this.constData.findUser({ email: user.email });
+            const checkemail = await this.IUserModal.user.findOne({where : { email: user.email }});
             if (checkemail && checkemail.dataValues && checkemail.dataValues.password) {
                 const passwordMatch = await bcrypt.compareSync(user.password, checkemail.dataValues.password);
                 if (passwordMatch) {
@@ -61,7 +61,7 @@ export class UserService {
             if (res) {
                 return res.dataValues;
             } else {
-                return userData;
+                return {status:508 ,data : "user is does not exist!"};
             }
         } catch (e) {
             return catchError(e, "userservice", "findUserById");
@@ -79,12 +79,12 @@ export class UserService {
     async updateUser(user: UserInstance) {
         try {
             // Logger.info(' user modal object::' + JSON.stringify(user));
-            const finduserbyid = await this.constData.findUser({ email: user.email });
+            const finduserbyid = await this.IUserModal.user.findOne({where : { email: user.email }});
             if (finduserbyid.dataValues) {
                 const res = await this.IUserModal.user.update(user, { where: { id: user.id } });
                 return (res[0] > 0) ? "success" : "failure";
             } else {
-                return userData;
+                return {status:508 ,data : "user is does not exist!"};
             }
         } catch (e) {
             return catchError(e, "userservice", "updateUser");
