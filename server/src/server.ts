@@ -5,6 +5,7 @@ import fs from 'fs';
 import path from 'path';
 import cors  from 'cors';
 import morgan from 'morgan';
+import chalk from "chalk";
 import Logger from './config/winstonlogger';
 import { DataBaseConfig } from './config/dbconfig';
 import Container from 'typedi';
@@ -18,7 +19,7 @@ const dbConnection=Container.get(DataBaseConfig);
 
  const app = express();
 // const app = express<ICustomRequest, express.Response>();
-const PORT = 8445;
+const PORT = process.env.PORT || 8445;
 app.use(morgan('common', {
   stream: fs.createWriteStream('./logs/application.log', {flags: 'a'})
 }));
@@ -44,6 +45,6 @@ app.use('/user', userController);
 
 app.listen(PORT, async () => {
       await dbConnection.checkConnection(); 
-      Logger.info(`⚡️ [server]: Server is running at ${PORT}`);
+      Logger.info(chalk.yellow(`⚡️ [server]: Server is running at ${chalk.blue(PORT)}`));
   });
   

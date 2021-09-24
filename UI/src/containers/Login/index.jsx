@@ -2,20 +2,20 @@ import React, { Component } from 'react';
 import {connect} from 'react-redux';
 import { Button } from "@material-ui/core";
 
-import { LOGGING_IN, LOGGED_IN } from './actionTypes';
+import { LOGGING_IN, LOGGED_IN } from './redux/actionTypes';
 import InputField from '../../components/common/InputField';
 import InputPasswordField from '../../components/common/InputPasswordField';
 import InputSubmitButton from '../../components/common/InputSubmitButton';
 import { Notification, notify } from '../../components/ToastNotification';
 import './Login.css';
-import { loginAction } from './actions';
+import { loginAction } from './redux/actions';
 
 class LogIn extends Component {
   constructor(props) {
     super(props);
     console.log("Login-props: ", props);
     this.state = {
-      emailId: '',
+      email: '',
       password: '',
     }
   }
@@ -27,15 +27,25 @@ class LogIn extends Component {
     });
   }
 
-  handleSubmit = (e) => {
-    const {emailId, password} = this.state;
-    console.log({emailId, password})
-    this.props.handleLogInButton({emailId, password});
-    this.props.history.push('/s2t');
+  handleSubmit = async (e) => {
+    const {email, password} = this.state;
+    let result = await this.props.handleLogInButton({email, password});
+    console.log('>>>>>>>code: ', result);
+    if(result && result.status == '200'){
+      notify.success('Successfully Logged-In');
+      setTimeout(() => {
+        this.props.history.push('/s2t');
+      }, 2000);
+    } else {
+      notify.error(result && result.data);
+    }
   }
   
+  componentWillReceiveProps(nextProps){
+    console.log('nextProps: ', nextProps);
+  }
   render(){
-    const {emailId, password} = this.state;
+    const {email, password} = this.state;
     return(
       <div className='container'>
         <div className='LoginForm'>
@@ -45,14 +55,14 @@ class LogIn extends Component {
           <div>
             <InputField
               className="EmailId"
-              id={"emailId"}
+              id={"email"}
               // error={error}
               // helperText={helperText}
               label={"Email Id"}
               name={"Email Id"}
               placeholder={"Email Id"}
               onChange={(e) => this.handleOnChange(e)}
-              value={emailId || ''}
+              value={email || ''}
               required={true}
               autoFocus={true}
               fullWidth={true}
@@ -97,7 +107,7 @@ class LogIn extends Component {
 
 function mapStateToProps(state, ownProps){
   return {
-    
+    userInfo: state.userInfo
   }
 }
 
@@ -109,4 +119,4 @@ function mapDispatchToProps(dispatch, ownProps){
   }
 }
 
-export default connect(null,mapDispatchToProps)(LogIn);
+export default connect(mapStateToProps,mapDispatchToProps)(LogIn);

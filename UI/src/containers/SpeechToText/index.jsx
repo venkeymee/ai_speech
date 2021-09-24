@@ -28,10 +28,11 @@ import PauseCircleFilledIcon from '@material-ui/icons/PauseCircleFilled';
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 import TitleBar from '../../components/TitleBar';
 import axios from 'axios';
+import { Notification, notify } from '../../components/ToastNotification';
+import { uploadAudioFile } from '../../apis/audioFileUploader';
 
 class SpeechToText extends Component {
   constructor(props) {
-    console.log("SpeechToTexh-props: ", props);
     super(props);
     this.state = {
       finalisedText: '',
@@ -40,10 +41,6 @@ class SpeechToText extends Component {
       canvasWidth: window.innerWidth,
       canvasHeight: window.innerHeight / 3,
     }
-  }
-
-  componentDidMount() {
-    console.log("screen.width: ", window.innerWidth)
   }
 
   start = () => {
@@ -68,11 +65,9 @@ class SpeechToText extends Component {
     this.setState({
       audioData: data
     });
-    let file
-    console.log('onStop: audio data', data);
   }
 
-  handleFileUpload = (e) => {
+  handleFileUpload = async (e) => {
     const {audioData} = this.state;
     if(!audioData || !audioData.blob){
       return;
@@ -84,13 +79,13 @@ class SpeechToText extends Component {
     const fileName = `${userId}_${timeStamp}.wav`;
     formData.append('audio', audioData.blob, fileName);
 
-    axios.post('http://localhost:8445/audio/upload_audio_file', formData)
-    .then((res) => {
-      // console.log('res ', res);
-    })
-    .catch((error) => {
-      console.log('##error-in-file-upload: ', error);
-    })
+    let result = await uploadAudioFile(formData);
+    if(result && result.status == 200){
+      notify.success('Your files is uploaded Successfully!! ');
+    } else {
+      result && notify.error(result || 'Something went wrong!');
+    }
+
   }
   reset = () => {
     this.setState({
@@ -116,7 +111,7 @@ class SpeechToText extends Component {
     }
 
     return (
-      <Paper elevation={3} style={{padding: '20px'}}>
+      <Paper elevation={0} style={{padding: '20px'}}>
         {/* <TitleBar title={this.props.componentName}/> */}
         <div style={{ display: 'flex', justifyContent: "center" }}>
           <Card style={{textAlign: 'center', backgroundColor: '#2e8b579e'}}  elevation={3}>
@@ -194,8 +189,9 @@ class SpeechToText extends Component {
               }
             </List>
             {
-              !(audioData && audioData.blob) ? '' : (
+              // !(audioData && audioData.blob) ? '' : (
                 <Button
+                disabled={!(audioData && audioData.blob)}
                   variant='contained'
                   color='primary'
                   style={{
@@ -206,9 +202,10 @@ class SpeechToText extends Component {
                 >
                   Click here to upload your file
                 </Button>
-              )
+              // )
             }
           </Card>
+          <Notification/>
         </div>
       </Paper>
     )

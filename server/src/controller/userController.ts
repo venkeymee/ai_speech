@@ -12,7 +12,7 @@ import { UserService } from '../services/userservice';
 import bcrypt from "bcryptjs";
 import { validateLogin, validateRegister } from "../middlewars/uservallidations";
 import responseMesg, { RESPONSEMSG, RESPONSESTATUS, RESPONSE_EMPTY_DATA } from '../responsemessages/responseMessages';
-import { apiResponses } from '../utility/constdata';
+import { apiResponses } from '../apiresponse/responseTemplate';
 
 const userservice = Container.get(UserService);
 

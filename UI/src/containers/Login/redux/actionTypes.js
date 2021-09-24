@@ -1,0 +1,4 @@
+export const LOGGING_IN = 'LOGGING IN';
+export const LOGGED_IN = 'LOGGED IN';
+export const LOGGED_IN_FAILED = 'LOGGED IN FAILED';
+export const LOGGED_IN_SUCCESS = 'LOGGED IN SUCCESS';

@@ -14,7 +14,7 @@ function AppLayout(props) {
     return routes.map((prop, key) => {
       // console.log("##prop: ", prop)
       if (!prop.childRoutes) {
-        console.log('##path: ', (props.match.path + prop.layout + prop.path));
+        // console.log('##path: ', (props.match.path + prop.layout + prop.path));
         return (
           <Route
             exact
@@ -25,7 +25,7 @@ function AppLayout(props) {
         );
       } else if (prop.childRoutes) {
         return (prop.childRoutes || []).map((childRoute) => {
-          console.log("##apath => ", props.match.path + prop.layout + prop.path + childRoute.path)
+          // console.log("##apath => ", props.match.path + prop.layout + prop.path + childRoute.path)
           return (<Route
             exact
             path={props.match.path + prop.layout + prop.path + childRoute.path}
@@ -40,8 +40,9 @@ function AppLayout(props) {
     });
   };
 
-  const {role} = props.userInfo;
-  const routesToBeRendered = (role === 'user') ? userRoutes : adminRoutes;
+  const {role, isAdmin} = props.userInfo;
+  console.log(">>isAdmin", isAdmin)
+  const routesToBeRendered = (!isAdmin) ? userRoutes : adminRoutes;
   return (
     <div>
       <div>
@@ -49,30 +50,11 @@ function AppLayout(props) {
       </div>
       <div style={{ paddingTop: '80px', height: '80vh' }}>
         <Switch>
-
           <Route exact path="/s2t/" >
-            <Redirect to={(role === 'user' ? "/s2t/user/speech-to-text" : "/s2t/admin/user-management")} />
+            <Redirect to={(!isAdmin ? "/s2t/user/speech-to-text" : "/s2t/admin/user-management")} />
           </Route>
           {
             getRoutes(routesToBeRendered)
-          }
-          {
-            // !(props.userInfo && props.userInfo.role === 'user') ? (
-            //   <>
-            //     <Route exact path="/s2t/" >
-            //       <Redirect to="/s2t/user/speech-to-text" />
-            //     </Route>
-            //     {getRoutes(userRoutes)}
-            //   </>
-            // ) : (
-            //     <>
-            //       <Route exact path="/s2t/" >
-            //         <Redirect to="/s2t/admin/admininfo" />
-            //       </Route>
-            //       {/* <Route exact path={props.match.path + "/admin"} render={(props) => <AdminLayout {...props} />} /> */}
-            //       {getRoutes(adminRoutes)}
-            //     </>
-            //   )
           }
         </Switch>
       </div>
