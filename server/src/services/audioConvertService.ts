@@ -22,10 +22,11 @@ export class audioConvertServices {
             */
             
             const audioInformation=await this.audio2Text(audio_file);
+            Logger.info("audioInformation:::",audioInformation)
             const res = await this.IAudioToTextModal.audio.create(audioInformation);
             return res;
         } catch (e) {
-            return catchError(e, "audioConvertService", "uploadTextFileorWaveFile")
+            return catchError(e, "audioConvertService", "uploadAudioFile")
 
         }
     }
@@ -84,7 +85,13 @@ export class audioConvertServices {
        try{
         let processData=await this.CMdEexcution(commond); 
         Logger.info(":::::Execution Commond Response Data"+processData);           
-        const textFilePath=path.format({ ...path.parse(audioRequest.wav_file_path), base: undefined, ext: '.docx' })
+        /**
+         * @TODO : capther the a2text exception and stored it DB.
+         *  step-1 : since it is not return any exception from command execution.
+         *  step-1 : check the docx file is existing if not write generic exception into DB.
+         */
+        const textFilePath = process.env.HOST_URL + (path.format({ ...path.parse(audioRequest.wav_file_path), base: undefined, ext: '.docx' }).split('ai_audios\\')[1]);
+        audioRequest.wav_file_path = process.env.HOST_URL + ((audioRequest.wav_file_path).split('ai_audios\\')[1]);
         const audioInfo={...audioRequest,...{text_file_path:textFilePath,cmdOperationData:JSON.stringify(processData)}} as Audio_To_Text_Speech;
         Logger.info("AudioConvertService:audio2Text:after converting object::"+JSON.stringify(audioInfo))
         Logger.info(":::::Converting Audio to Text file  END:::");

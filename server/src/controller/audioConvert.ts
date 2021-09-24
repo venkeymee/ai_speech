@@ -34,12 +34,14 @@ const router = express.Router();
 router.post('/upload_audio_file', async (req: ICustomRequest, res) => {
     let uploadedfile;
     if (!req.files || Object.keys(req.files).length === 0) {
-        return res.status(400).send('No files were uploaded.');
+        return res.status(400).send({status: 400, message : 'No files were uploaded.'});
     }
     Logger.info("audiConver::upload_audio_file::name" + fs.existsSync(CONST_PARAMS.AUDIO_FILE_PATH));
     uploadedfile = req.files.audio;
-    let usrId=req.user_id || '';
+    let usrId=req.body.user_id ;
+    Logger.info("usrId:::",uploadedfile, "uploadfile::",uploadedfile);
     if (!fs.existsSync(path.join(__dirname, CONST_PARAMS.AUDIO_FILE_PATH))) { mkdirSync(path.join(__dirname, CONST_PARAMS.AUDIO_FILE_PATH)) }
+    Logger.info("uploadfile:::",uploadedfile)
     const filePath = path.join(__dirname, CONST_PARAMS.AUDIO_FILE_PATH.concat(uploadedfile.name));
     uploadedfile.mv(filePath, async(err) => {
         if (err) {
@@ -47,10 +49,7 @@ router.post('/upload_audio_file', async (req: ICustomRequest, res) => {
             }
         const audioRequest={user_id:usrId,wav_file_path:filePath} as Audio_To_Text_Speech;
         const result= await audioConvertServicess.uploadAudioFile(audioRequest);
-        const response = (result instanceof Error)
-            ? responseMesg(RESPONSESTATUS.EXCEPTION, RESPONSEMSG.EXCEPTION, RESPONSE_EMPTY_DATA)
-            : responseMesg(RESPONSESTATUS.SUCCESS, RESPONSEMSG.RETRIVE_SUCCESS, result)
-        return res.send(response);
+        return apiResponses(result,res,RESPONSEMSG.INSERT_SUCCESS);
     });
  
 });

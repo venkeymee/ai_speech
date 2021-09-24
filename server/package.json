@@ -50,10 +50,10 @@
     "util": "^0.12.4",
     "winston": "^3.3.3"
   },
-  "nodemonConfig":{
+  "nodemonConfig": {
     "restartable": "rs",
     "delay": 2500,
-    "env":{
+    "env": {
       "PORT": 8445
     }
   }
