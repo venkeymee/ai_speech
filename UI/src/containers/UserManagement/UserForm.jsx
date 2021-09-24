@@ -8,39 +8,81 @@ import {
   TextField
 } from '@material-ui/core';
 
-export default UserForm = (props) => {
+export default function UserForm(props) {
   const {
-    userData
+    formTitle,
+    formData,
+    doesFormDialogOpen,
+    handleCancelButton,
+    handleSubmitButton,
+    handleInputChange
   } = props;
-  const { state, setState } = useState({});
-  const handleOnChange = (e) => {
-    const { id, name, value } = e.currentTarger;
-    setState((prevState) => ({
-      ...prevState,
-      [id]: value
-    }));
-  }
+  // const { state, setState } = useState({});
+
 
   return (
     <Dialog
-      maxWidth="sm"
-      open={this.state.deleteItem_DialogOpen}
-      onClose={this.handle_Delete_Item_RequestClose}
+      maxWidth="md"
+      open={doesFormDialogOpen}
+      onClose={handleCancelButton}
     >
+      <DialogTitle> {formTitle} </DialogTitle>
       <DialogContent>
         <div className="row">
           <div className="col-lg-6">
             <TextField
               autoFocus
-              id="name"
+              id="firstname"
               className="mb-3"
-              label="Name"
-              name="name"
-              // onChange={(e) => handleEditFormChange(e)}
-              value={state.validation.name}
+              label="First Name"
+              name="firstname"
+              onChange={(e) => handleInputChange(e)}
+              value={formData.firstname}
               fullWidth
-              // error={state.errors.name}
-              // helperText={state.errors.name}
+            // error={state.errors.name}
+            // helperText={state.errors.name}
+            />
+          </div>
+          <div className="col-lg-6">
+            <TextField
+              autoFocus
+              id="lastname"
+              className="mb-3"
+              label="Last Name"
+              name="lastname"
+              onChange={(e) => handleInputChange(e)}
+              value={formData.lastname}
+              fullWidth
+            // error={state.errors.lastname}
+            // helperText={state.errors.lastname}
+            />
+          </div>
+          <div className="col-lg-6">
+            <TextField
+              autoFocus
+              id="email"
+              className="mb-3"
+              label="E-mail Id"
+              name="email"
+              onChange={(e) => handleInputChange(e)}
+              value={formData.email}
+              fullWidth
+            // error={state.errors.email}
+            // helperText={state.errors.email}
+            />
+          </div>
+          <div className="col-lg-6">
+            <TextField
+              autoFocus
+              id="address"
+              className="mb-3"
+              label="Address"
+              name="address"
+              onChange={(e) => handleInputChange(e)}
+              value={formData.address}
+              fullWidth
+            // error={state.errors.address}
+            // helperText={state.errors.address}
             />
           </div>
         </div>
@@ -48,22 +90,21 @@ export default UserForm = (props) => {
       </DialogContent>
       <DialogActions>
         <Button
-          // onClick={(e) => handle_Edit_Form_RequestClose(e)}
+          onClick={(e) => handleCancelButton(e)}
           color="secondary"
           variant="contained"
         >
-          <IntlMessages id="ipp.common.Cancel.button" />
+          Cancel
         </Button>
         <Button
-          // onClick={(e) => handleEditFormSubmit(e)}
+          onClick={(e) => handleSubmitButton(e)}
           color="primary"
-          disabled={!state.isEditFormSubmitDisabled}
+          // disabled={!state.isEditFormSubmitDisabled}
           variant="contained"
         >
-          <IntlMessages id="ipp.common.submit.button" />
+          Submit
         </Button>
       </DialogActions>
     </Dialog>
   )
-
 }

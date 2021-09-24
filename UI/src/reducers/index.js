@@ -1,4 +1,4 @@
-import { loginReducer } from '../containers/Login/reducer';
+import { loginReducer } from '../containers/Login/redux/reducer';
 import { combineReducers } from 'redux';
 
 export default (history) => combineReducers({

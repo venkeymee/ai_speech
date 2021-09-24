@@ -11,8 +11,7 @@ import {IntialValueObj, AppRootContext} from './contexts/AppRoot';
 
 const intialStore = {
   userInfo: {
-    role: 'user',
-    userId: 123,
+    isAdmin: 1
   }
 }
 export const store = configureStore(intialStore);

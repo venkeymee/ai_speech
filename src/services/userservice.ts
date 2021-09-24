@@ -2,7 +2,7 @@ import { where } from "sequelize/types";
 import { Service } from "typedi";
 import Logger from "../config/winstonlogger";
 import bcrypt from "bcryptjs";
-import {  catchError, generateToken} from "../utility/constdata";
+import {  catchError, generateToken} from "../apiresponse/responseTemplate";
 import { User, UserInstance } from "../entity/user";
 
 @Service()

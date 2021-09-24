@@ -15,7 +15,7 @@ import fs, { mkdir, mkdirSync } from 'fs';
 import { User } from '../entity/user';
 import { audioConvertServices } from '../services/audioConvertService';
 import responseMesg, { RESPONSEMSG, RESPONSESTATUS, RESPONSE_EMPTY_DATA } from '../responsemessages/responseMessages';
-import { apiResponses } from '../utility/constdata';
+import { apiResponses } from '../apiresponse/responseTemplate';
 
 /**
  * @TODO move this below const to const files or util file
@@ -61,12 +61,12 @@ router.post('/upload_audio_file', async (req: ICustomRequest, res) => {
 });
 
 router.get('/download', async (req, res) => {
-    const filename = req.body.file;
+    const filename: any = req.query.filename;
     const directoryPath = path.join(__dirname, '../../tempuploads/');
     res.download(directoryPath + filename, filename, (err) => {
         if (err) {
             res.status(500).send({
-                message: 'Unable to read ' + filename + ' file. Please check',
+                message: '' + filename + ' file not found!',
             });
     }
 });

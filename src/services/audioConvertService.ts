@@ -1,7 +1,7 @@
 import { where } from "sequelize/types";
 import { Service } from "typedi";
 import Logger from "../config/winstonlogger";
-import { catchError} from "../utility/constdata";
+import { catchError} from "../apiresponse/responseTemplate";
 import { AudioToTextSpeech,Audio_To_Text_Speech } from "../entity/audioToSpeech";
 
 @Service()
