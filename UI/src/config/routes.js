@@ -2,14 +2,15 @@ import AdminDashboard  from '../containers/AdminDashboard';
 import UserDashboard  from '../containers/UserDashboard';
 import SpeechToText  from '../containers/SpeechToText';
 import UserManagement  from '../containers/UserManagement';
+import AudioAndFileManagement  from '../containers/AudioAndTextFileManagement';
 
 export const adminRoutes = [
-    // {
-    //     component: AdminDashboard,
-    //     name: 'Admin Dashboard',
-    //     path: '/admininfo',
-    //     layout: '/admin'
-    // },
+    {
+        component: AudioAndFileManagement,
+        name: 'Audio & Text File Management',
+        path: '/admininfo',
+        layout: '/admin'
+    },
     {
         component: UserManagement,
         name: 'User Management',

@@ -16,6 +16,8 @@ export interface Audio_To_Text_Speech extends Model {
     wav_file_path : string; // for nullable fields
     text_file_path : string;
     cmdOperationData : string;
+    description : string,
+    error_file_path : string;
     status : number;
 }
   
@@ -40,6 +42,14 @@ export class AudioToTextSpeech{
             allowNull: false,
           },
           text_file_path: {
+            type: new DataTypes.STRING(1500),
+            allowNull: false,
+          },
+          description: {
+            type: new DataTypes.STRING(1500),
+            allowNull: false,
+          },
+          error_file_path: {
             type: new DataTypes.STRING(1500),
             allowNull: false,
           },

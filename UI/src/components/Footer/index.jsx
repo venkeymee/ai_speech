@@ -27,7 +27,10 @@ export default function Footer(props) {
       style={{
         backgroundColor: theam?.defaultTheam?.backgroundColor,
         color: "white",
-        height: "5vh"
+        height: "5vh",
+        position: 'fixed',
+        bottom: '0px',
+        width: '100%'
       }}
     >
       <span className="d-inline-block" >Copyright. &copy; {new Date().getFullYear()}</span>

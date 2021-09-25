@@ -47,7 +47,7 @@ export class audioConvertServices {
             if (res) {
                 return res.dataValues;
             } else {
-                return {status: 508, data : "audio is not exist"};
+                return {status: 422, data : "audio is not exist"};
             }
         } catch (e) {
             return catchError(e, "audioConvertService", "findAudioById");
@@ -57,7 +57,7 @@ export class audioConvertServices {
         try {
             // Logger.info(' audio modal object::' + JSON.stringify(audio));
             const res = await this.IAudioToTextModal.audio.destroy({ where: { id: audio } });
-            return (res > 0) ? {status: 508, data: "success"} : {status: 508, data: "failure"};
+            return (res > 0) ? "success" : {status: 422, data: "failure"};
         } catch (e) {
             return catchError(e, "audioConvertService", "delteAudio");
         }
@@ -68,9 +68,9 @@ export class audioConvertServices {
             const findaudiobyid = await this.IAudioToTextModal.audio.findOne({where : {id: audio.id}});
             if (findaudiobyid.dataValues) {
                 const res = await this.IAudioToTextModal.audio.update(audio, { where: { id: audio.id } });
-                return (res[0] > 0) ? {status: 508, data: "success"} : {status: 508, data: "failure"};
+                return (res[0] > 0) ? "success" : {status: 422, data: "failure"};
             } else {
-                return {status: 508, data : "audio is not exist"};
+                return {status: 422, data : "audio is not exist"};
             }
         } catch (e) {
             return catchError(e, "audioConvertService", "updateAudio");

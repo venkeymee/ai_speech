@@ -4,7 +4,7 @@ import responseMesg, { RESPONSEMSG, RESPONSESTATUS, RESPONSE_EMPTY_DATA } from "
 
 const catchError = (e,service,method) => {
     Logger.error(`${service}::${method}::exception or error::",${e}`);
-    return {status:508 ,data:e.message};
+    return {status:500 ,data:e.message};
 }
 
 function generateToken(value)  {
@@ -12,8 +12,12 @@ function generateToken(value)  {
 
 }
 const apiResponses =(result,res,msg)=>{
-    if (result && result.status == 508) {
-        return res.status(result.status || 200).send(responseMesg(RESPONSESTATUS.EXCEPTION, RESPONSEMSG.EXCEPTION, result.data));
+    if (result && result.status == 500) {
+        return res.status(result.status).send(responseMesg(RESPONSESTATUS.ERROR, result.data));
+    } else if (result && result.status == 422) {
+        return res.status(result.status).send(responseMesg(RESPONSESTATUS.EXCEPTION, result.data));
+    } else if (result && result.status == 401) {
+        return res.status(result.status).send(responseMesg(RESPONSESTATUS.FAIL, result.data));
     } else {
         const response:any = (result instanceof Error)
         ? responseMesg(RESPONSESTATUS.EXCEPTION, RESPONSEMSG.EXCEPTION, RESPONSE_EMPTY_DATA)

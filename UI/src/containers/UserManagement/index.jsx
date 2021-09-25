@@ -28,6 +28,7 @@ import DeleteIcon from "@material-ui/icons/Delete";
 import {fetchUsersList} from './redux/actions';
 import UserForm from './UserForm.jsx';
 import { dummyData } from './dummyData';
+import { signUpAPI, updateUserInfoByIdAPI, deleteUserInfoByIdAPI } from '../../apis/user';
 
 const columnData = [
   {
@@ -72,8 +73,8 @@ class UserManagement extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      // userList: [],
-      userList: dummyData,
+      userList: [],
+      // userList: dummyData,
       formData: {},
       editForm_DialogOpen: false,
       deleteItem_DialogOpen: false,
@@ -118,6 +119,12 @@ class UserManagement extends Component {
   onTableEditButtonClick = (e) => {
     const { id, name } = e.currentTarget;
     console.log("Editing-id: ", id);
+    let resData = (this.state.userList || []).find((obj) => obj.id == id) || {};
+    this.setState({
+      editForm_DialogOpen: true,
+      selectedItemId: id,
+      formData: {...resData}
+    })
   }
 
   onTableDeleteButtonClick = (e) => {
@@ -149,13 +156,22 @@ class UserManagement extends Component {
     
   }
 
-  handleAddDataRequest = () => {
+  handleAddDataRequest = async () => {
     console.log('>>>user-form-data: ', this.state.formData);
+    let {formData} = this.state;
     // API call to create user
-    this.setState({
-      addForm_DialogOpen: false,
-      formData: {}
-    })
+    let res = await signUpAPI({...formData});
+    if(res && res.status == 200){
+      notify.success('Successfully created user!');
+      this.setState({
+        addForm_DialogOpen: false,
+        formData: {}
+      })
+      // now, fetch updated user-list
+      await this.props.dispatch(fetchUsersList());
+    } else {
+      notify.error(res.data || 'Something went wrong while creating user');
+    }
   }
 
   handleAddDataRequestClose = () => {
@@ -164,6 +180,7 @@ class UserManagement extends Component {
       addForm_DialogOpen: false,
     })
   }
+
   handleInputChange = (e) => {
     const { id, name, value } = e.currentTarget;
     const {formData} = this.state;
@@ -175,16 +192,29 @@ class UserManagement extends Component {
   }
 
 
-  handleUpdateRequest = () => {
+  handleUpdateRequest = async () => {
     // API call to edit user info
-    this.setState({
-      editForm_DialogOpen: false,
-    })
+    let {formData} = this.state;
+    !formData && (formData = {});
+    // API call to create user
+    let res = await updateUserInfoByIdAPI(formData.id, {...formData});
+    if(res && res.status == 200){
+      notify.success('Successfully Updated the User info!');
+      this.setState({
+        editForm_DialogOpen: false,
+        formData: {}
+      })
+      // now, fetch updated user-list
+      await this.props.dispatch(fetchUsersList());
+    } else {
+      notify.error(res.data || 'Something went wrong while Updating User');
+    }
     
   }
   handleUpdateRequestCancel = () => {
     this.setState({
       editForm_DialogOpen: false,
+      formData: {}
     })
     
   }
@@ -212,6 +242,7 @@ class UserManagement extends Component {
     return (this.state.addForm_DialogOpen) ? (
       <UserForm
         formTitle={'Create User'}
+        isItEditForm={false}
         isItEditMode={false}
         // errors={state.errors}
         formData={this.state.formData || {}}
@@ -224,12 +255,13 @@ class UserManagement extends Component {
     ) : (
         <UserForm
           formTitle={'Edit User Info'}
+          isItEditForm={true}
           isItEditMode={true}
           // errors={state.errors}
           doesFormDialogOpen={this.state.editForm_DialogOpen}
           handleSubmitButton={this.handleUpdateRequest}
           handleCancelButton={this.handleUpdateRequestCancel}
-          formData={ (this.state.userList || []).find((obj) => obj.id == this.state.selectedItemId) || {}}
+          formData={ this.state.formData || {}}
           handleInputChange={this.handleInputChange}
           isEditFormSubmitDisabled={this.state.isEditFormSubmitDisabled}
         />

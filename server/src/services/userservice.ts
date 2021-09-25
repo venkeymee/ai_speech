@@ -18,7 +18,7 @@ export class UserService {
                 const res = await this.IUserModal.user.create(user);
                 return { user_id: res.dataValues.id, add_user: "success" };
             } else {
-                return { status :508 ,data : "The Email already in use!"}
+                return { status :422 ,data : "The Email already in use!"}
             }
         } catch (e) {
             return catchError(e, "userservice", "createUser")
@@ -28,17 +28,17 @@ export class UserService {
         try {
             // Logger.info(' user modal object::' + JSON.stringify(user));
             const checkemail = await this.IUserModal.user.findOne({where : { email: user.email }});
-            if (checkemail && checkemail.dataValues && checkemail.dataValues.password) {
-                const passwordMatch = await bcrypt.compareSync(user.password, checkemail.dataValues.password);
-                if (passwordMatch) {
+            if (checkemail && checkemail.dataValues && checkemail.dataValues.email == user.email) {
+                // const passwordMatch = await bcrypt.compareSync(user.password, checkemail.dataValues.password);
+                if (checkemail && checkemail.dataValues && checkemail.dataValues.password == user.password) {
                     const theToken = generateToken(checkemail.dataValues.email);
                     // console.log("thevalues",Object.assign(checkemail.dataValues,theToken))
                     return Object.assign(checkemail.dataValues,{accesToken : theToken});
                 } else {
-                    return { status :508 ,data : "Invalid user credentials!"};
+                    return { status :401 ,data : "Invalid user credentials!"};
                 }
             } else {
-                return { status :508 ,data : "User does not exist!"};
+                return { status :401 ,data : "User does not exist!"};
             }
         } catch (e) {
             return catchError(e, "userservice", "loginUser")
@@ -47,8 +47,6 @@ export class UserService {
     async findAllusers() {
         try {
             const res = await this.IUserModal.user.findAll();
-            // console.log(res.every(user => user instanceof this.IUserModal.user)); // true
-            // console.log("All users:", JSON.stringify(res, null, 2))
             return res;
         } catch (e) {
             return catchError(e, "userservice", "findAllusers")
@@ -62,7 +60,7 @@ export class UserService {
             if (res) {
                 return res.dataValues;
             } else {
-                return {status:508 ,data : "user is does not exist!"};
+                return {status:422 ,data : "user is does not exist!"};
             }
         } catch (e) {
             return catchError(e, "userservice", "findUserById");
@@ -72,7 +70,7 @@ export class UserService {
         try {
             // Logger.info(' user modal object::' + JSON.stringify(user));
             const res = await this.IUserModal.user.destroy({ where: { id: user } });
-            return (res > 0) ? {status: 508, data: "success"} : {status: 508, data: "failure"};
+            return (res > 0) ? "success" : {status: 422, data: "failure"};
         } catch (e) {
             return catchError(e, "userservice", "delteUser");
         }
@@ -83,9 +81,10 @@ export class UserService {
             const finduserbyid = await this.IUserModal.user.findOne({where : { email: user.email }});
             if (finduserbyid.dataValues) {
                 const res = await this.IUserModal.user.update(user, { where: { id: user.id } });
-                return (res[0] > 0) ? {status: 508, data: "success"} : {status: 508, data: "failure"};
+                // Logger.info("userservice:::updateuser::info"+ res);
+                return (res[0] > 0) ?  "success" : {status: 422, data: "failure"};
             } else {
-                return {status:508 ,data : "user is does not exist!"};
+                return {status:422 ,data : "user is does not exist!"};
             }
         } catch (e) {
             return catchError(e, "userservice", "updateUser");

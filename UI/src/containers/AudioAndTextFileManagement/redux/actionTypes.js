@@ -1,0 +1,4 @@
+export const DELETE_FILE =  'DELETE_FILE';
+export const FETCH_All_FILES = 'FETCH_All_FILES';
+export const FETCH_All_FILES_SUCCESS = 'FETCH_All_FILES_SUCCESS';
+export const FETCH_All_FILES_FAILED = 'FETCH_All_FILES_FAILED';

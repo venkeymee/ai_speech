@@ -38,7 +38,9 @@ router.post('/upload_audio_file', async (req: ICustomRequest, res) => {
     }
     Logger.info("audiConver::upload_audio_file::name" + fs.existsSync(CONST_PARAMS.AUDIO_FILE_PATH));
     uploadedfile = req.files.audio;
-    let usrId=req.body.user_id ;
+    let usrId=req.body.user_id || '';
+    let error_file_path = req.body.error_file_path || '';
+    let description = req.body.description || '';
     Logger.info("usrId:::",uploadedfile, "uploadfile::",uploadedfile);
     if (!fs.existsSync(path.join(__dirname, CONST_PARAMS.AUDIO_FILE_PATH))) { mkdirSync(path.join(__dirname, CONST_PARAMS.AUDIO_FILE_PATH)) }
     Logger.info("uploadfile:::",uploadedfile)
@@ -47,7 +49,7 @@ router.post('/upload_audio_file', async (req: ICustomRequest, res) => {
         if (err) {
              return res.send(responseMesg(RESPONSESTATUS.EXCEPTION, RESPONSEMSG.EXCEPTION, RESPONSE_EMPTY_DATA)); 
             }
-        const audioRequest={user_id:usrId,wav_file_path:filePath} as Audio_To_Text_Speech;
+        const audioRequest={user_id:usrId,wav_file_path:filePath,error_file_path: error_file_path,description: description} as Audio_To_Text_Speech;
         const result= await audioConvertServicess.uploadAudioFile(audioRequest);
         return apiResponses(result,res,RESPONSEMSG.INSERT_SUCCESS);
     });
@@ -59,7 +61,7 @@ router.get('/download', async (req, res) => {
     const directoryPath = path.join(__dirname, '../../tempuploads/');
     res.download(directoryPath + filename, filename, (err) => {
         if (err) {
-            res.status(500).send({
+            res.status(500).send({status :500,
                 message: '' + filename + ' file not found!',
             });
     }

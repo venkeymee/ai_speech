@@ -1,5 +1,5 @@
 import axios from 'axios';
-const baseURL = process.env.baseURL || "http://192.168.43.62:8445";
+const baseURL = process.env.baseURL || "http://localhost:8445";
 
 export function loginAPI(payload) {
 	return axios.post(`${baseURL}/user/login`, payload)
@@ -59,7 +59,7 @@ export function deleteUserInfoByIdAPI(userId) {
 }
 
 export function updateUserInfoByIdAPI(userId, payload) {
-	return axios.put(`${baseURL}/user/${userId}`, payload)
+	return axios.post(`${baseURL}/user/update-user`, payload)
 		.then(function (response) {
 			// handle success
 			const {data} = response;

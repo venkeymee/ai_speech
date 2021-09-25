@@ -19,13 +19,13 @@ const userservice = Container.get(UserService);
 const router = express.Router();
 
 router.post('/signup', validateRegister, async (req, res) => {
-    var salt = await bcrypt.genSaltSync(10);
-    let hashPass = await bcrypt.hashSync(req.body.password, salt)
+    // var salt = await bcrypt.genSaltSync(10);
+    // let hashPass = await bcrypt.hashSync(req.body.password, salt)
     const user = {
         lastname: req.body.lastname || '',
         firstname: req.body.firstname,
         email: req.body.email,
-        password: hashPass,
+        password: req.body.password,
         isAdmin: req.body.isAdmin || '',
         address: req.body.address || '',
         status: req.body.status || ''

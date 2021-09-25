@@ -15,10 +15,11 @@ export default function UserForm(props) {
     doesFormDialogOpen,
     handleCancelButton,
     handleSubmitButton,
-    handleInputChange
+    handleInputChange,
+    isItEditForm
   } = props;
   // const { state, setState } = useState({});
-
+  console.log('>>>isItEditForm', formData);
 
   return (
     <Dialog
@@ -32,6 +33,7 @@ export default function UserForm(props) {
           <div className="col-lg-6">
             <TextField
               autoFocus
+              required
               id="firstname"
               className="mb-3"
               label="First Name"
@@ -46,6 +48,7 @@ export default function UserForm(props) {
           <div className="col-lg-6">
             <TextField
               autoFocus
+              required
               id="lastname"
               className="mb-3"
               label="Last Name"
@@ -60,6 +63,7 @@ export default function UserForm(props) {
           <div className="col-lg-6">
             <TextField
               autoFocus
+              required
               id="email"
               className="mb-3"
               label="E-mail Id"
@@ -71,6 +75,25 @@ export default function UserForm(props) {
             // helperText={state.errors.email}
             />
           </div>
+          {
+            isItEditForm ? ('') : (
+              <div className="col-lg-6">
+                <TextField
+                  autoFocus
+                  required
+                  id="password"
+                  className="mb-3"
+                  label="Password"
+                  name="password"
+                  onChange={(e) => handleInputChange(e)}
+                  value={formData.password}
+                  fullWidth
+                // error={state.errors.password}
+                // helperText={state.errors.password}
+                />
+              </div>
+            )
+          }
           <div className="col-lg-6">
             <TextField
               autoFocus

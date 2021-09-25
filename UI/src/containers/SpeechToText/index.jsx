@@ -26,10 +26,11 @@ import PlayCircleFilledWhiteIcon from '@material-ui/icons/PlayCircleFilledWhite'
 import StopIcon from '@material-ui/icons/Stop';
 import PauseCircleFilledIcon from '@material-ui/icons/PauseCircleFilled';
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
+import PublishIcon from '@material-ui/icons/Publish';
 import TitleBar from '../../components/TitleBar';
 import axios from 'axios';
 import { Notification, notify } from '../../components/ToastNotification';
-import { uploadAudioFile } from '../../apis/audioFileUploader';
+import { uploadAudioFileAPI } from '../../apis/audioAndTextFileManager';
 
 class SpeechToText extends Component {
   constructor(props) {
@@ -38,14 +39,16 @@ class SpeechToText extends Component {
       finalisedText: '',
       recordState: null,
       audioData: null,
-      canvasWidth: window.innerWidth,
-      canvasHeight: window.innerHeight / 3,
+      canvasWidth: 500,
+      canvasHeight: 150,
+      doesTheAudioFileUploaded: false,
     }
   }
 
   start = () => {
     this.setState({
-      recordState: RecordState.START
+      recordState: RecordState.START,
+      doesTheAudioFileUploaded: false,
     })
   }
 
@@ -79,8 +82,11 @@ class SpeechToText extends Component {
     const fileName = `${userId}_${timeStamp}.wav`;
     formData.append('audio', audioData.blob, fileName);
 
-    let result = await uploadAudioFile(formData);
+    let result = await uploadAudioFileAPI(formData);
     if(result && result.status == 200){
+      this.setState({
+        doesTheAudioFileUploaded: true
+      })
       notify.success('Your files is uploaded Successfully!! ');
     } else {
       result && notify.error(result || 'Something went wrong!');
@@ -99,7 +105,8 @@ class SpeechToText extends Component {
       recordState,
       audioData,
       canvasWidth,
-      canvasHeight
+      canvasHeight,
+      doesTheAudioFileUploaded
     } = this.state;
 
     const AddTooltipEffect = (props) => {
@@ -123,8 +130,8 @@ class SpeechToText extends Component {
                 <AudioReactRecorder
                   state={this.state.recordState}
                   onStop={this.onStop}
-                  // canvasWidth={canvasWidth}
-                  // canvasHeight={canvasHeight}
+                  canvasWidth={500}
+                  canvasHeight={150}
                   backgroundColor={'black'}
                   foregroundColor={'blue'}
                 />
@@ -170,6 +177,16 @@ class SpeechToText extends Component {
                   <HighlightOffIcon fontSize="large" />
                 </IconButton>
               </AddTooltipEffect>
+              <AddTooltipEffect title='Upload your Audio file'>
+                <IconButton
+                  aria-label="Upload your Audio file"
+                  color={'primary'}
+                  onClick={this.handleFileUpload}
+                  disabled={!(audioData && audioData.blob) || doesTheAudioFileUploaded}
+                >
+                  <PublishIcon fontSize="large" />
+                </IconButton>
+              </AddTooltipEffect>
             </CardActions>
             {/* <hr color={'grey'} size={'20'} /> */}
             <h4> Here your audio recored file: </h4>
@@ -189,20 +206,20 @@ class SpeechToText extends Component {
               }
             </List>
             {
-              // !(audioData && audioData.blob) ? '' : (
-                <Button
-                disabled={!(audioData && audioData.blob)}
-                  variant='contained'
-                  color='primary'
-                  style={{
-                    margin: '20px',
-                    width: '-webkit-fill-available'
-                  }}
-                  onClick={this.handleFileUpload}
-                >
-                  Click here to upload your file
-                </Button>
-              // )
+              // // !(audioData && audioData.blob) ? '' : (
+              //   <Button
+              //   disabled={!(audioData && audioData.blob)}
+              //     variant='contained'
+              //     color='primary'
+              //     style={{
+              //       margin: '20px',
+              //       width: '-webkit-fill-available'
+              //     }}
+              //     onClick={this.handleFileUpload}
+              //   >
+              //     Click here to upload your file
+              //   </Button>
+              // // )
             }
           </Card>
           <Notification/>
