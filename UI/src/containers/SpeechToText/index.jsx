@@ -31,6 +31,8 @@ import TitleBar from '../../components/TitleBar';
 import axios from 'axios';
 import { Notification, notify } from '../../components/ToastNotification';
 import { uploadAudioFileAPI } from '../../apis/audioAndTextFileManager';
+import { getUserData } from '../../utils/index';
+import './styles.css';
 
 class SpeechToText extends Component {
   constructor(props) {
@@ -77,10 +79,16 @@ class SpeechToText extends Component {
     }
 
     let formData = new FormData();
-    const userId = 'userId'; // for time being, hardcoding some string
+    let userId = 'unknown'; // for time being, hardcoding some string
+    const userInfo = getUserData(); // It'll return current-user-info, if the user is already logged-in
+    if(userInfo && userInfo.id){
+      userId = userInfo.id;
+    }
+
     const timeStamp = new Date().toJSON().replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/]/gi, '');
     const fileName = `${userId}_${timeStamp}.wav`;
     formData.append('audio', audioData.blob, fileName);
+    formData.append('user_id', userId);
 
     let result = await uploadAudioFileAPI(formData);
     if(result && result.status == 200){

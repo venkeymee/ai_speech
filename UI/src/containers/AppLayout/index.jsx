@@ -7,6 +7,7 @@ import { userRoutes, adminRoutes } from '../../config/routes';
 import { AppRootContext } from '../../contexts/AppRoot';
 import TopNavBar from '../../components/TopNavBar';
 import Footer from '../../components/Footer';
+import { getUserData } from '../../utils/index';
 
 function AppLayout(props) {
   const theam = useContext(AppRootContext);
@@ -40,8 +41,11 @@ function AppLayout(props) {
     });
   };
 
-  const {role, isAdmin} = props.userInfo;
-  console.log(">>isAdmin", isAdmin)
+  let userInfo = props.userInfo;
+  if(userInfo && !userInfo.role) {
+    userInfo = getUserData && getUserData();
+  }
+  const {role, isAdmin} = userInfo || {};
   const routesToBeRendered = (!isAdmin) ? userRoutes : adminRoutes;
   return (
     <div>
@@ -55,7 +59,8 @@ function AppLayout(props) {
           </Route>
           {
             getRoutes(routesToBeRendered)
-          }
+          }          
+          <Redirect from='/s2t/*' to='/404' />
         </Switch>
       </div>
       <div>
@@ -66,7 +71,7 @@ function AppLayout(props) {
 }
 
 const mapStateToProps = (state) => {
-  console.log("state: ", state);
+  // console.log("state: ", state);
   return {
     userVerified: state.isVerfied,
     userInfo: state.userInfo

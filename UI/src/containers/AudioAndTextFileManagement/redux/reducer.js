@@ -12,7 +12,7 @@ export const AudioAndTextFileModuleReducer = (state = intialState, action) => {
     case FETCH_All_FILES_SUCCESS:
       return {
         ...state,
-        ...action.payload
+        allFilesList: [...action.payload] || []
       };
     case FETCH_All_FILES_FAILED:
       return state;

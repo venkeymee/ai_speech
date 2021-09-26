@@ -1,3 +1,9 @@
 .blankImageBox {
     background-image:  url('../../assets/images/dummyImage.jpg');
 }
+
+.card-1 {
+    /* background-image:  url('./s2t-logo.jpg'); */
+    background-repeat: no-repeat;
+    background-size: cover;
+}

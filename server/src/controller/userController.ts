@@ -10,7 +10,7 @@ import Logger from '../config/winstonlogger';
 import { User, UserInstance } from '../entity/user';
 import { UserService } from '../services/userservice';
 import bcrypt from "bcryptjs";
-import { validateLogin, validateRegister } from "../middlewars/uservallidations";
+import{validateLogin,validateRegister} from "../middlewars/uservallidations";
 import responseMesg, { RESPONSEMSG, RESPONSESTATUS, RESPONSE_EMPTY_DATA } from '../responsemessages/responseMessages';
 import { apiResponses } from '../apiresponse/responseTemplate';
 
@@ -27,8 +27,8 @@ router.post('/signup', validateRegister, async (req, res) => {
         email: req.body.email,
         password: req.body.password,
         isAdmin: req.body.isAdmin || '',
-        address: req.body.address || '',
-        status: req.body.status || ''
+        address: req.body.address || 0,
+        status: req.body.status || 0
     } as UserInstance;
     const result: any = await userservice.createUser(user);
     return apiResponses(result,res,RESPONSEMSG.INSERT_SUCCESS);

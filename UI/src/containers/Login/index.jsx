@@ -30,14 +30,15 @@ class LogIn extends Component {
   handleSubmit = async (e) => {
     const {email, password} = this.state;
     let result = await this.props.handleLogInButton({email, password});
-    console.log('>>>>>>>code: ', result);
+    // console.log('>>>>>>>code: ', result);
     if(result && result.status == '200'){
       notify.success('Successfully Logged-In');
       setTimeout(() => {
         this.props.history.push('/s2t');
       }, 2000);
     } else {
-      notify.error(result && result.data);
+      const errMsg = (result && result.message) || 'Something went wrong while logging-in';
+      notify.error(errMsg);
     }
   }
   

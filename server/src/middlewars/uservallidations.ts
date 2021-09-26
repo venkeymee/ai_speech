@@ -1,7 +1,7 @@
 import {body} from 'express-validator';
 
 let validateRegister = [
-    body('username',{username : "Email address is not in correct order"})
+    body('email',{email : "Email address is not in correct order"})
     .notEmpty()
     .escape()
     .trim()
@@ -12,7 +12,7 @@ let validateRegister = [
     .isLength({ min: 4 }),
 ]
 let validateLogin = [
-    body('username',{username:"Email address is not in correct order"})
+    body('email',{username:"Email address is not in correct order"})
     .notEmpty()
     .escape()
     .trim().isEmail(),

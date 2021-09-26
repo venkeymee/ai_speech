@@ -87,6 +87,9 @@ class UserManagement extends Component {
 
   async componentDidMount(){
     // const {dispatch} = this.props;
+    this.getUserInfo();
+  }
+  async getUserInfo() {
     let result = await this.props.fetchUsersList();
     // console.log('>>fetchUserList-result: ', result);
     if(result && result.status == 200){
@@ -98,7 +101,6 @@ class UserManagement extends Component {
       notify.error('Something went wrong while fetching Users list!!');
     }
   }
-  
   componentWillReceiveProps(nextProps){
     console.log('nextProps', nextProps);
     console.log('nextProps', this.props);
@@ -168,9 +170,11 @@ class UserManagement extends Component {
         formData: {}
       })
       // now, fetch updated user-list
-      await this.props.dispatch(fetchUsersList());
+      // await this.props.dispatch(fetchUsersList());
+      this.getUserInfo();
+      
     } else {
-      notify.error(res.data || 'Something went wrong while creating user');
+      notify.error(res.message || 'Something went wrong while creating user');
     }
   }
 
@@ -205,9 +209,11 @@ class UserManagement extends Component {
         formData: {}
       })
       // now, fetch updated user-list
-      await this.props.dispatch(fetchUsersList());
+      // await this.props.dispatch(fetchUsersList());
+      this.getUserInfo();
+      
     } else {
-      notify.error(res.data || 'Something went wrong while Updating User');
+      notify.error(res.message || 'Something went wrong while Updating User');
     }
     
   }

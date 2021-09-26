@@ -46,7 +46,14 @@ const columnData = [
     //   width: "40%"
   },
   {
-    id: "errorDescription",
+    id: "error_file_path",
+    align: "left",
+    disablePadding: true,
+    label: "Text file",
+    //   width: "40%"
+  },
+  {
+    id: "description",
     align: "left",
     disablePadding: true,
     label: "Error Description",
@@ -201,7 +208,7 @@ class AudioAndFileManagement extends Component {
         <DialogContent>
           <div style={{ display: 'flex', flexDirection: 'column', alignContent: 'space-around' }}>
             {
-              !(selectedFileContent || {}).errorDescription ? (
+              !(selectedFileContent || {}).description ? (
                 <>
                   <CreateDownloadButton
                     buttonName={'Audio File'}
@@ -281,7 +288,8 @@ class AudioAndFileManagement extends Component {
                       <TableCell> {obj.user_id} </TableCell>
                       <TableCell> {obj.wav_file_path} </TableCell>
                       <TableCell> {obj.text_file_path} </TableCell>
-                      <TableCell> {obj.errorDescription} </TableCell>
+                      <TableCell> {obj.error_file_path} </TableCell>
+                      <TableCell> {obj.description} </TableCell>
                       <TableCell
                         // align="center"
                         width="20%"

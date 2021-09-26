@@ -19,6 +19,9 @@ import AccountCircle from '@material-ui/icons/AccountCircle';
 import MoreIcon from '@material-ui/icons/MoreVert';
 import { AppRootContext } from '../../contexts/AppRoot';
 import { Link } from 'react-router-dom';
+import { getUserData, clearOutUserData } from '../../utils/index';
+import { userRoutes, adminRoutes } from '../../config/routes';
+import { notify } from '../ToastNotification';
 
 const drawerWidth = 240;
 
@@ -104,7 +107,16 @@ const useStyles = makeStyles((theme) =>
 
 
 export default function TopNavBar(props) {
-  const { handleDrawerOpen, open, role, routesToBeRendered } = props;
+  const userInfo = getUserData && getUserData();
+  // console.log("TopNavbar-userInfo: ", userInfo);
+  const { handleDrawerOpen, open } = props;
+  const { isAdmin } = userInfo || {};
+  
+  let routesToBeRendered = [];
+  if(![null, undefined].includes(isAdmin)){
+    routesToBeRendered = (!isAdmin) ? userRoutes : adminRoutes;
+  }
+  console.log('TopNavbar-routesToBeRendered:', routesToBeRendered)
   const classes = useStyles();
   const theam = useContext(AppRootContext);
 
@@ -128,6 +140,15 @@ export default function TopNavBar(props) {
     handleMobileMenuClose();
   };
   const handleLogout = () => {
+    notify.info("you'll be logging out in 2 sec.");
+    setTimeout(() => {
+      handleMenuClose();
+      clearOutUserData(); //remove user info, which we have stored while logging-in
+      props.history && props.history.push('/login');
+    }, 2000);
+  };
+
+  const handleLogIn = () => {
     handleMenuClose();
     props.history && props.history.push('/login');
   };
@@ -164,7 +185,14 @@ export default function TopNavBar(props) {
     >
       {/* <MenuItem onClick={handleMenuClose}>Profile</MenuItem> */}
       {/* <MenuItem onClick={handleMenuClose}>My account</MenuItem> */}
-      <MenuItem onClick={handleLogout}>Log Out</MenuItem>
+      {
+        [0,1].includes(isAdmin) ? (
+          <MenuItem onClick={handleLogout}>Log Out</MenuItem>
+          ) : (
+            <MenuItem onClick={handleLogIn}>Log In</MenuItem>
+        )
+      }
+      
     </Menu>
   );
 
@@ -225,30 +253,31 @@ export default function TopNavBar(props) {
   );
 
   const RenderActionMenu =(props) => (
-      <Menu
-        id="simple-menu"
-        anchorEl={userMenuEl}
-        keepMounted
-        open={Boolean(userMenuEl)}
-        onClose={handleClose}
-        style={{ top: '30px' }}
-      >
+      <>
         {
           (routesToBeRendered || []).map((item) => {
             let navPath = (props.match.path + item.layout + item.path);
             // console.log(">>navPath: ", navPath);
             return (
-              <MenuItem
+              <Button
                 id={navPath}
                 key={navPath}
                 onClick={handleNavigation}
+                variant={'outlined'}
+                style={{
+                  marginLeft: '5px',
+                  border: '1px solid rgba(0, 0, 0, 0.23)',
+                  borderRadius: '10px',
+                  borderColor: 'white',
+                  color: 'white'
+                }}
               >
                 {item.name}
-              </MenuItem>
+              </Button>
             )
           })
         }
-      </Menu>
+      </>
   );
 
   return (
@@ -261,7 +290,7 @@ export default function TopNavBar(props) {
         style={{ backgroundColor: (theam?.defaultTheam?.backgroundColor || 'green') }}
       >
         <Toolbar>
-          <IconButton
+          {/* <IconButton
             color="inherit"
             aria-label="open drawer"
             onClick={handleDrawerOpen}
@@ -271,21 +300,21 @@ export default function TopNavBar(props) {
             })}
           >
             <MenuIcon />
-          </IconButton>
+          </IconButton> */}
           <Typography variant="h6" noWrap>
             {props.title || 'Project Title'}
           </Typography>
           <div className={classes.grow} />
           <div className={classes.sectionDesktop}>
             
-      <Button
+      {/* <Button
         aria-controls="simple-menu"
         aria-haspopup="true"
         onClick={handleClick}
         style={{ color: 'inherit' }}
       >
         {(role === 'user') ? 'User Actions' : 'Admin Actions'}
-      </Button>
+      </Button> */}
             <RenderActionMenu {...props}/>
             {/* <IconButton aria-label="show 4 new mails" color="inherit">
               <Badge badgeContent={4} color="secondary">

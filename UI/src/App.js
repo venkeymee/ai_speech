@@ -8,10 +8,12 @@ import { BrowserRouter as Router, HashRouter, Switch, Route, Redirect } from 're
 import AppLayout from './containers/AppLayout'
 import Login from './containers/Login';
 import {IntialValueObj, AppRootContext} from './contexts/AppRoot';
-
+import UnAutharizedDashboard from './containers/UnAutharizedDashboard';
+import PageNotFound from './containers/PageNotFound';
+import Signup from "./containers/Signup";
 const intialStore = {
   userInfo: {
-    isAdmin: 1
+    // isAdmin: 1
   }
 }
 export const store = configureStore(intialStore);
@@ -23,10 +25,14 @@ function App(props) {
         <Switch>
           <AppRootContext.Provider value={IntialValueObj}>
             <Route exact path="/" >
-              <Redirect to="/login" />
+              <Redirect to="/unautharized" />
             </Route>
+            <Route path="/unautharized" component={UnAutharizedDashboard} />
             <Route path="/login" component={Login} />
+            <Route path="/signup" component={Signup} />
             <Route path="/s2t" render={(props) => <AppLayout {...props} />} />
+            <Route path='/404' render={(props) => <PageNotFound {...props} />}  />
+            {/* <Redirect from='/*' to='/404' /> */}
           </AppRootContext.Provider>
         </Switch>
       </HashRouter>
