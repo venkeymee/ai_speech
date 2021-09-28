@@ -97,7 +97,7 @@ class SpeechToText extends Component {
       })
       notify.success('Your files is uploaded Successfully!! ');
     } else {
-      result && notify.error(result || 'Something went wrong!');
+      result && notify.error(result.message || 'Something went wrong!');
     }
 
   }

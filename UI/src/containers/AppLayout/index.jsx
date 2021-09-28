@@ -52,7 +52,7 @@ function AppLayout(props) {
       <div>
         <TopNavBar {...props} title={theam.projectTitle} role={role} routesToBeRendered={routesToBeRendered} />
       </div>
-      <div style={{ paddingTop: '80px' }}>
+      <div style={{ paddingTop: '80px', paddingBottom: '30px' }}>
         <Switch>
           <Route exact path="/s2t/" >
             <Redirect to={(!isAdmin ? "/s2t/user/speech-to-text" : "/s2t/admin/user-management")} />
@@ -60,7 +60,7 @@ function AppLayout(props) {
           {
             getRoutes(routesToBeRendered)
           }          
-          <Redirect from='/s2t/*' to='/404' />
+          <Redirect from='/s2t/*' to='/login' />
         </Switch>
       </div>
       <div>

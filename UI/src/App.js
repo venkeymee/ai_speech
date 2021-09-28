@@ -10,7 +10,6 @@ import Login from './containers/Login';
 import {IntialValueObj, AppRootContext} from './contexts/AppRoot';
 import UnAutharizedDashboard from './containers/UnAutharizedDashboard';
 import PageNotFound from './containers/PageNotFound';
-import Signup from "./containers/Signup";
 const intialStore = {
   userInfo: {
     // isAdmin: 1
@@ -25,14 +24,13 @@ function App(props) {
         <Switch>
           <AppRootContext.Provider value={IntialValueObj}>
             <Route exact path="/" >
-              <Redirect to="/unautharized" />
+              <Redirect to="/login" />
             </Route>
-            <Route path="/unautharized" component={UnAutharizedDashboard} />
+            {/* <Route path="/unautharized" component={UnAutharizedDashboard} /> */}
             <Route path="/login" component={Login} />
-            <Route path="/signup" component={Signup} />
             <Route path="/s2t" render={(props) => <AppLayout {...props} />} />
-            <Route path='/404' render={(props) => <PageNotFound {...props} />}  />
-            {/* <Redirect from='/*' to='/404' /> */}
+            {/* <Route path='/404' render={(props) => <PageNotFound {...props} />}  /> */}
+            {/* <Redirect from='/*' to='/login' /> */}
           </AppRootContext.Provider>
         </Switch>
       </HashRouter>

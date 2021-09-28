@@ -12,7 +12,7 @@ let validateRegister = [
     .isLength({ min: 4 }),
 ]
 let validateLogin = [
-    body('email',{username:"Email address is not in correct order"})
+    body('email',{email:"Email address is not in correct order"})
     .notEmpty()
     .escape()
     .trim().isEmail(),

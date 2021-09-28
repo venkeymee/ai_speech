@@ -13,6 +13,7 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { Notification, notify } from '../../components/ToastNotification';
+import { signUpAPI } from '../../apis/user'
 
 function Copyright(props) {
     return (
@@ -36,33 +37,17 @@ export default function SignUp() {
     const [password, setPassword] = React.useState('');
     const [address, setaddress] = React.useState('');
 
-    const register = (event) => {
-        // console.log(firstname + " " + lastname +" " + email + " "+ password + " "+ address  )
-        console.log(email == '');
+    const register = async (event) => {
         if (!(email == '' || firstname == '' || password == '')) {
-            fetch('http://localhost:8445/user/signup', {
-                method: 'post',
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    email: email,
-                    firstname: firstname,
-                    lastname: lastname,
-                    password: password,
-                    address: address
-                })
-            }).then((res) => res.json())
-                .then((res) => { 
-                    if (res && res.status && res.status == 200) {
-                        notify.success('Registration successfully');
-                          this.props.history.push("/unautharized")
-                    } else {
-                        let errMsg = (res && res.message) || "'Something went wrong while sign-up'"
-                        notify.error(errMsg)
-                    }
-                })
+            const res = await signUpAPI({ email, firstname, lastname, password, address });
+            console.log("res", res);
+            if (res && res.status && res.status == 200) {
+                notify.success('Registration successfully');
+                this.props.history.push("/unautharized")
+            } else {
+                let errMsg = (res && res.message) || "'Something went wrong while sign-up'"
+                notify.error(errMsg)
+            }
         } else {
             notify.error("First-name and Email and password is mandotory! ");
         }
@@ -163,7 +148,7 @@ export default function SignUp() {
                     </Grid>
                 </Box>
                 {/* </Box> */}
-                <Copyright sx={{ mt: 5 }} />
+                {/* <Copyright sx={{ mt: 5 }} /> */}
                 <Notification />
             </Container>
         </ThemeProvider>

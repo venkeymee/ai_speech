@@ -21,7 +21,9 @@ import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
 import { fetchAllFiles } from './redux/actions';
 import { dummyData } from './dummyData';
+import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
 import { fetchAllFilesAPI, downloadFileAPI } from '../../apis/audioAndTextFileManager';
+import { downloadData } from '../../utils';
 
 const columnData = [
   {
@@ -49,7 +51,7 @@ const columnData = [
     id: "error_file_path",
     align: "left",
     disablePadding: true,
-    label: "Text file",
+    label: "Error file",
     //   width: "40%"
   },
   {
@@ -220,11 +222,11 @@ class AudioAndFileManagement extends Component {
                   />
                 </>
               ) : (
-                  <CreateDownloadButton
-                    buttonName={'Error File'}
-                    handleOnClick={this.downloadErrorFile}
-                  />
-                )
+                <CreateDownloadButton
+                  buttonName={'Error File'}
+                  handleOnClick={this.downloadErrorFile}
+                />
+              )
             }
 
           </div>
@@ -233,7 +235,7 @@ class AudioAndFileManagement extends Component {
         <DialogActions>
           <Button variant={'contained'} onClick={this.handle_Download_File_RequestClose} color="primary">
             Cancel
-            </Button>
+          </Button>
         </DialogActions>
       </>
     )
@@ -257,63 +259,74 @@ class AudioAndFileManagement extends Component {
       </DialogActions>
     </>
   );
-
+  handleDownloadWavFile = (obj) => {
+    return downloadData(obj);
+    // console.log(" data",data)
+  }
+  handleDownloadDocxFile = (obj) =>{
+    return downloadData(obj);
+  }
   render() {
     return (
       <div>
         <Paper elevation={3} style={{ margin: '20px', padding: '10px', display: "flex", justifyContent: 'space-between', alignItems: 'center' }}>
           <b> Audio & Text File Management </b>
         </Paper>
-        <Paper elevation={3} style={{ margin: '20px' }}>
-          <Table sx={{ minWidth: 650 }} aria-label="customized table">
-            <TableHead style={{ backgroundColor: 'lightgreen' }}>
-              <TableRow>
+        <Paper elevation={3} style={{ margin: '20px', overflow: 'auto' }}>
+          <TableContainer style={{ maxHeight: window.innerHeight * 0.8 }}>
+            <Table stickyHeader sx={{ minWidth: 650 }} aria-label="customized table">
+              <TableHead style={{ backgroundColor: 'lightgreen' }}>
+                <TableRow>
+                  {
+                    (columnData || []).map((col) => {
+                      return (
+                        <TableCell align="left" key={col.id}>
+                          {col.label}
+                        </TableCell>
+                      )
+                    })
+                  }
+                </TableRow>
+              </TableHead>
+              <TableBody>
                 {
-                  (columnData || []).map((col) => {
+                  (this.state.userList || []).map((obj, i) => {
+                    let rowBgColor = (i % 2 === 0) ? 'inherit' : 'lightgrey';
                     return (
-                      <TableCell align="left" key={col.id}>
-                        {col.label}
-                      </TableCell>
+                      <TableRow key={obj.id} style={{ backgroundColor: rowBgColor }}>
+                        <TableCell> {(obj.user_id == 0) ? 'UNKNOWN' : obj.user_id} </TableCell>
+                        {/* <TableCell> {obj.wav_file_path} </TableCell> */}
+                        {/* <TableCell>{obj.wav_file_path? <button><CloudDownloadIcon onClick={ (e) => this.handleDownloadWavFile({e :obj.wav_file_path})} style={{color : "blue"}} /></button> : "File Not Here"}</TableCell> */}
+                        {/* <TableCell>{obj.text_file_path == " " ?  "File Not Here" : <button><CloudDownloadIcon onClick={ (e) => this.handleDownloadDocxFile({e :obj.text_file_path})} style={{color : "blue"}}/></button>}</TableCell> */}
+                        <TableCell> {obj.wav_file_path} </TableCell>
+                        <TableCell> {obj.text_file_path} </TableCell>
+                        <TableCell> {obj.error_file_path} </TableCell>
+                        <TableCell> {obj.description} </TableCell>
+                        <TableCell
+                          // align="center"
+                          width="20%"
+                          padding="none"
+                        >
+                          <IconButton
+                            id={obj.id}
+                            onClick={(e) => this.onTableRowFileDonwloadButtonClick(e)}
+                          >
+                            <EditIcon color="primary" />
+                          </IconButton>
+                          <IconButton
+                            id={obj.id}
+                            onClick={(e) => this.onTableDeleteButtonClick(e)}
+                          >
+                            <DeleteIcon color="secondary" />
+                          </IconButton>
+                        </TableCell>
+                      </TableRow>
                     )
                   })
                 }
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {
-                (this.state.userList || []).map((obj, i) => {
-                  let rowBgColor = (i % 2 === 0) ? 'inherit' : 'lightgrey';
-                  return (
-                    <TableRow key={obj.id} style={{ backgroundColor: rowBgColor }}>
-                      <TableCell> {obj.user_id} </TableCell>
-                      <TableCell> {obj.wav_file_path} </TableCell>
-                      <TableCell> {obj.text_file_path} </TableCell>
-                      <TableCell> {obj.error_file_path} </TableCell>
-                      <TableCell> {obj.description} </TableCell>
-                      <TableCell
-                        // align="center"
-                        width="20%"
-                        padding="none"
-                      >
-                        <IconButton
-                          id={obj.id}
-                          onClick={(e) => this.onTableRowFileDonwloadButtonClick(e)}
-                        >
-                          <EditIcon color="primary" />
-                        </IconButton>
-                        <IconButton
-                          id={obj.id}
-                          onClick={(e) => this.onTableDeleteButtonClick(e)}
-                        >
-                          <DeleteIcon color="secondary" />
-                        </IconButton>
-                      </TableCell>
-                    </TableRow>
-                  )
-                })
-              }
-            </TableBody>
-          </Table>
+              </TableBody>
+            </Table>
+          </TableContainer>
         </Paper>
         <Dialog
           maxWidth="sm"

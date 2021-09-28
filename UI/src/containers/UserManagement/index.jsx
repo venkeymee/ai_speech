@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Switch, Route, Redirect } from 'react-router-dom';
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 import { Notification, notify } from '../../components/ToastNotification';
 import {
   TableContainer,
@@ -25,7 +25,7 @@ import {
 // } from '@material-ui/icons';
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
-import {fetchUsersList} from './redux/actions';
+import { fetchUsersList } from './redux/actions';
 import UserForm from './UserForm.jsx';
 import { dummyData } from './dummyData';
 import { signUpAPI, updateUserInfoByIdAPI, deleteUserInfoByIdAPI } from '../../apis/user';
@@ -85,14 +85,14 @@ class UserManagement extends Component {
     };
   }
 
-  async componentDidMount(){
+  async componentDidMount() {
     // const {dispatch} = this.props;
     this.getUserInfo();
   }
   async getUserInfo() {
     let result = await this.props.fetchUsersList();
     // console.log('>>fetchUserList-result: ', result);
-    if(result && result.status == 200){
+    if (result && result.status == 200) {
       this.setState({
         userList: result.data || []
       });
@@ -101,7 +101,7 @@ class UserManagement extends Component {
       notify.error('Something went wrong while fetching Users list!!');
     }
   }
-  componentWillReceiveProps(nextProps){
+  componentWillReceiveProps(nextProps) {
     console.log('nextProps', nextProps);
     console.log('nextProps', this.props);
   }
@@ -125,7 +125,7 @@ class UserManagement extends Component {
     this.setState({
       editForm_DialogOpen: true,
       selectedItemId: id,
-      formData: {...resData}
+      formData: { ...resData }
     })
   }
 
@@ -137,7 +137,7 @@ class UserManagement extends Component {
       selectedDeleteId: id,
     });
   }
-  
+
   deleteForm_YesConfirm = (e) => {
     const { id } = e.currentTarget;
     console.log('deleting-userId: ', this.state.selectedDeleteId);
@@ -155,15 +155,15 @@ class UserManagement extends Component {
   }
 
   handle_Delete_Item_RequestClose = () => {
-    
+
   }
 
   handleAddDataRequest = async () => {
     console.log('>>>user-form-data: ', this.state.formData);
-    let {formData} = this.state;
+    let { formData } = this.state;
     // API call to create user
-    let res = await signUpAPI({...formData});
-    if(res && res.status == 200){
+    let res = await signUpAPI({ ...formData });
+    if (res && res.status == 200) {
       notify.success('Successfully created user!');
       this.setState({
         addForm_DialogOpen: false,
@@ -172,7 +172,7 @@ class UserManagement extends Component {
       // now, fetch updated user-list
       // await this.props.dispatch(fetchUsersList());
       this.getUserInfo();
-      
+
     } else {
       notify.error(res.message || 'Something went wrong while creating user');
     }
@@ -187,8 +187,8 @@ class UserManagement extends Component {
 
   handleInputChange = (e) => {
     const { id, name, value } = e.currentTarget;
-    const {formData} = this.state;
-    formData[id]= value;
+    const { formData } = this.state;
+    formData[id] = value;
     this.setState((prevState) => ({
       ...prevState,
       formData
@@ -198,11 +198,11 @@ class UserManagement extends Component {
 
   handleUpdateRequest = async () => {
     // API call to edit user info
-    let {formData} = this.state;
+    let { formData } = this.state;
     !formData && (formData = {});
     // API call to create user
-    let res = await updateUserInfoByIdAPI(formData.id, {...formData});
-    if(res && res.status == 200){
+    let res = await updateUserInfoByIdAPI(formData.id, { ...formData });
+    if (res && res.status == 200) {
       notify.success('Successfully Updated the User info!');
       this.setState({
         editForm_DialogOpen: false,
@@ -211,18 +211,18 @@ class UserManagement extends Component {
       // now, fetch updated user-list
       // await this.props.dispatch(fetchUsersList());
       this.getUserInfo();
-      
+
     } else {
       notify.error(res.message || 'Something went wrong while Updating User');
     }
-    
+
   }
   handleUpdateRequestCancel = () => {
     this.setState({
       editForm_DialogOpen: false,
       formData: {}
     })
-    
+
   }
   deleteItem_content = (
     <>
@@ -243,7 +243,7 @@ class UserManagement extends Component {
     </>
   );
 
-  
+
   getFormContent = () => {
     return (this.state.addForm_DialogOpen) ? (
       <UserForm
@@ -267,7 +267,7 @@ class UserManagement extends Component {
           doesFormDialogOpen={this.state.editForm_DialogOpen}
           handleSubmitButton={this.handleUpdateRequest}
           handleCancelButton={this.handleUpdateRequestCancel}
-          formData={ this.state.formData || {}}
+          formData={this.state.formData || {}}
           handleInputChange={this.handleInputChange}
           isEditFormSubmitDisabled={this.state.isEditFormSubmitDisabled}
         />
@@ -277,7 +277,7 @@ class UserManagement extends Component {
   render() {
     return (
       <div>
-        <Paper elevation={3} style={{margin: '20px', padding: '10px', display: "flex", justifyContent: 'space-between', alignItems: 'center'}}>
+        <Paper elevation={3} style={{ margin: '20px', padding: '10px', display: "flex", justifyContent: 'space-between', alignItems: 'center' }}>
           <b> Users List </b>
           <Button
             color='primary'
@@ -292,55 +292,58 @@ class UserManagement extends Component {
             !(this.state.addForm_DialogOpen || this.state.editForm_DialogOpen) ? ('') : (this.getFormContent())
           }
         </div>
-        <Paper elevation={3} style={{margin: '20px'}}>
-          <Table sx={{ minWidth: 650 }}  aria-label="customized table">
-            <TableHead style={{backgroundColor: 'lightgreen'}}>
-              <TableRow>
+        <Paper elevation={3} style={{ margin: '20px', overflow: 'auto' }}>
+
+          <TableContainer style={{ maxHeight: window.innerHeight * 0.8 }}>
+            <Table stickyHeader sx={{ minWidth: 650 }} aria-label="customized table">
+              <TableHead style={{ backgroundColor: 'lightgreen' }}>
+                <TableRow>
+                  {
+                    (columnData || []).map((col) => {
+                      return (
+                        <TableCell align="left" key={col.id}>
+                          {col.label}
+                        </TableCell>
+                      )
+                    })
+                  }
+                </TableRow>
+              </TableHead>
+              <TableBody>
                 {
-                  (columnData || []).map((col) => {
+                  (this.state.userList || []).map((obj, i) => {
+                    let rowBgColor = (i % 2 === 0) ? 'inherit' : 'lightgrey';
                     return (
-                      <TableCell align="left" key={col.id}>
-                        {col.label}
-                      </TableCell>
+                      <TableRow key={obj.id} style={{ backgroundColor: rowBgColor }}>
+                        <TableCell> {obj.firstname} </TableCell>
+                        <TableCell> {obj.lastname} </TableCell>
+                        <TableCell> {obj.email} </TableCell>
+                        <TableCell> {obj.address} </TableCell>
+                        <TableCell
+                          // align="center"
+                          width="20%"
+                          padding="none"
+                        >
+                          <IconButton
+                            id={obj.id}
+                            onClick={(e) => this.onTableEditButtonClick(e)}
+                          >
+                            <EditIcon color="primary" />
+                          </IconButton>
+                          <IconButton
+                            id={obj.id}
+                            onClick={(e) => this.onTableDeleteButtonClick(e)}
+                          >
+                            <DeleteIcon color="secondary" />
+                          </IconButton>
+                        </TableCell>
+                      </TableRow>
                     )
                   })
                 }
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {
-                (this.state.userList || []).map((obj, i) => {
-                  let rowBgColor = (i % 2 === 0) ? 'inherit' : 'lightgrey';
-                  return (
-                    <TableRow key={obj.id} style={{backgroundColor: rowBgColor}}>
-                      <TableCell> {obj.firstname} </TableCell>
-                      <TableCell> {obj.lastname} </TableCell>
-                      <TableCell> {obj.email} </TableCell>
-                      <TableCell> {obj.address} </TableCell>
-                      <TableCell
-                        // align="center"
-                        width="20%"
-                        padding="none"
-                      >
-                        <IconButton
-                          id={obj.id}
-                          onClick={(e) => this.onTableEditButtonClick(e)}
-                        >
-                          <EditIcon color="primary" />
-                        </IconButton>
-                        <IconButton
-                          id={obj.id}
-                          onClick={(e) => this.onTableDeleteButtonClick(e)}
-                        >
-                          <DeleteIcon color="secondary" />
-                        </IconButton>
-                      </TableCell>
-                    </TableRow>
-                  )
-                })
-              }
-            </TableBody>
-          </Table>
+              </TableBody>
+            </Table>
+          </TableContainer>
         </Paper>
         {/* <Dialog
           maxWidth="sm"
@@ -356,19 +359,19 @@ class UserManagement extends Component {
         >
           {this.deleteItem_content}
         </Dialog>
-        <Notification/>
+        <Notification />
       </div>
     )
   }
 }
 
-function mapStateToProps(state, ownProps){
+function mapStateToProps(state, ownProps) {
   return {
     userModule: state.userModule
   }
 }
 
-function mapDispatchToProps(dispatch, ownProps){
+function mapDispatchToProps(dispatch, ownProps) {
   return {
     fetchUsersList: () => dispatch(fetchUsersList()),
     dispatch

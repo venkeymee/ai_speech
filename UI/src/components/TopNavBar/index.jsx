@@ -223,30 +223,40 @@ export default function TopNavBar(props) {
         </IconButton>
         <p>Notifications</p>
       </MenuItem> */}
-      <MenuItem
-        onClick={handleClick}
-      >
-        <IconButton
-          aria-label="account of current user"
-          aria-controls="primary-search-account-menu"
-          aria-haspopup="true"
-          color="inherit"
-        >
-          <AccountCircle />
-        </IconButton>
-        <p>User Actions</p>
-      </MenuItem>
+      {
+        (routesToBeRendered || []).map((item) => {
+          let navPath = (props.match.path + item.layout + item.path);
+          // console.log(">>navPath: ", navPath);
+          return (
+            <MenuItem
+              id={navPath}
+              key={navPath}
+              onClick={handleNavigation}
+              // variant={'outlined'}
+              // style={{
+              //   marginLeft: '5px',
+              //   border: '1px solid rgba(0, 0, 0, 0.23)',
+              //   borderRadius: '10px',
+              //   borderColor: 'white',
+              //   color: 'white'
+              // }}
+            >
+              {item.name}
+            </MenuItem>
+          )
+        })
+      }
       <MenuItem 
-        // onClick={handleProfileMenuOpen}
+        onClick={handleProfileMenuOpen}
       >
-        <IconButton
+        {/* <IconButton
           aria-label="account of current user"
           aria-controls="primary-search-account-menu"
           aria-haspopup="true"
           color="inherit"
         >
           <AccountCircle />
-        </IconButton>
+        </IconButton> */}
         <p>Profile</p>
       </MenuItem>
     </Menu>
@@ -259,7 +269,7 @@ export default function TopNavBar(props) {
             let navPath = (props.match.path + item.layout + item.path);
             // console.log(">>navPath: ", navPath);
             return (
-              <Button
+              <MenuItem
                 id={navPath}
                 key={navPath}
                 onClick={handleNavigation}
@@ -273,7 +283,7 @@ export default function TopNavBar(props) {
                 }}
               >
                 {item.name}
-              </Button>
+              </MenuItem>
             )
           })
         }

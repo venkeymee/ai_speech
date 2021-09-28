@@ -29,7 +29,7 @@ router.post('/signup', validateRegister, async (req, res) => {
         isAdmin: req.body.isAdmin || '',
         address: req.body.address || 0,
         status: req.body.status || 0
-    } as UserInstance;
+    } as UserInstance; 
     const result: any = await userservice.createUser(user);
     return apiResponses(result,res,RESPONSEMSG.INSERT_SUCCESS);
 });
