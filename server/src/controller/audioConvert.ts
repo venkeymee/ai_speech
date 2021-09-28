@@ -58,7 +58,7 @@ router.post('/upload_audio_file', async (req: ICustomRequest, res) => {
 
 router.get('/download', async (req, res) => {
     const filename: any = req.query.filename;
-    const directoryPath = path.join(__dirname, '../../tempuploads/');
+    const directoryPath = path.join(__dirname, '../../ai_audios/');
     res.download(directoryPath + filename, filename, (err) => {
         if (err) {
             res.status(500).send({status :500,

@@ -94,20 +94,20 @@ export class audioConvertServices {
         const textFilePath = process.env.HOST_URL + (path.format({ ...path.parse(audioRequest.wav_file_path), base: undefined, ext: '.docx' }).split('ai_audios\\')[1]);
         // console.log("textfilepath.",textFilePath);
         // console.log("existssync",(fs.existsSync(textFilePath)));
-        if(!(fs.existsSync(textFilePath))){
-            audioRequest.wav_file_path = process.env.HOST_URL + ((audioRequest.wav_file_path).split('ai_audios\\')[1]);
-            audioRequest.error_file_path = process.env.HOST_URL + ((audioRequest.error_file_path).split('ai_audios\\')[1]);
-            const audioInfo={...audioRequest,...{text_file_path : ' ',cmdOperationData:JSON.stringify(processData)}} as Audio_To_Text_Speech;
-            Logger.info("AudioConvertService:audio2Text:after converting object::"+JSON.stringify(audioInfo))
-            Logger.info(":::::Converting Audio to Text file  END:::");
-            return audioInfo;        
-         }else{
+        // if(!(fs.existsSync(textFilePath))){
+        //     audioRequest.wav_file_path = process.env.HOST_URL + ((audioRequest.wav_file_path).split('ai_audios\\')[1]);
+        //     audioRequest.error_file_path = process.env.HOST_URL + ((audioRequest.error_file_path).split('ai_audios\\')[1]);
+        //     const audioInfo={...audioRequest,...{text_file_path : ' ',cmdOperationData:JSON.stringify(processData)}} as Audio_To_Text_Speech;
+        //     Logger.info("AudioConvertService:audio2Text:after converting object::"+JSON.stringify(audioInfo))
+        //     Logger.info(":::::Converting Audio to Text file  END:::");
+        //     return audioInfo;        
+        //  }else{
         audioRequest.wav_file_path = process.env.HOST_URL + ((audioRequest.wav_file_path).split('ai_audios\\')[1]);
         const audioInfo={...audioRequest,...{text_file_path:textFilePath,cmdOperationData:JSON.stringify(processData)}} as Audio_To_Text_Speech;
         Logger.info("AudioConvertService:audio2Text:after converting object::"+JSON.stringify(audioInfo))
         Logger.info(":::::Converting Audio to Text file  END:::");
         return audioInfo; 
-        }
+        // }
       }catch(exe){
         Logger.error("AudioConvertService:audio2Text:Error"+exe);
         Logger.info(":::::Converting Audio to Text file  END:::");
