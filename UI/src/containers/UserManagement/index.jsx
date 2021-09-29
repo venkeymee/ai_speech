@@ -96,7 +96,7 @@ class UserManagement extends Component {
       this.setState({
         userList: result.data || []
       });
-      notify.success('Successfully fetched Users list!!');
+      // notify.success('Successfully fetched Users list!!');
     } else {
       notify.error('Something went wrong while fetching Users list!!');
     }

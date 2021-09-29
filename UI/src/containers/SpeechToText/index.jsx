@@ -44,6 +44,7 @@ class SpeechToText extends Component {
       canvasWidth: 500,
       canvasHeight: 150,
       doesTheAudioFileUploaded: false,
+      doesTheDownloadButtonClose: false
     }
   }
 
@@ -93,7 +94,8 @@ class SpeechToText extends Component {
     let result = await uploadAudioFileAPI(formData);
     if(result && result.status == 200){
       this.setState({
-        doesTheAudioFileUploaded: true
+        doesTheAudioFileUploaded: true,
+        doesTheDownloadButtonClose : true
       })
       notify.success('Your files is uploaded Successfully!! ');
     } else {
@@ -193,7 +195,7 @@ class SpeechToText extends Component {
                   disabled={!(audioData && audioData.blob) || doesTheAudioFileUploaded}
                 >
                   <PublishIcon fontSize="large" />
-                </IconButton>
+                </IconButton> 
               </AddTooltipEffect>
             </CardActions>
             {/* <hr color={'grey'} size={'20'} /> */}

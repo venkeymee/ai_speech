@@ -123,7 +123,7 @@ class AudioAndFileManagement extends Component {
       this.setState({
         userList: result.data || []
       });
-      notify.success('Successfully fetched All Files list!!');
+      // notify.success('Successfully fetched All Files list!!');
     } else {
       notify.error('Something went wrong while fetching All Files list!!');
     }
@@ -182,23 +182,12 @@ class AudioAndFileManagement extends Component {
 
   }
   handleDownloadWavFile = async (fileDownloadUrl) => {
-    // const { selectedFileContent } = this.state;
-    console.log("file", fileDownloadUrl)
-    // let url = '';
-    // url = JSON.stringify(file);
     const url = new URL(fileDownloadUrl || '');
     const fileName = url.searchParams.get('filename');
-    // console.log("before:::fileFormate::::::",fileFormate)
-    // fileFormate = fileFormate.split("filename=")[1].split('"')[0];
-    // if(file)
-    // let FileName = fileFormate.split(".wav")[0];
-    // fileFormate = file.split('/').reverse()[0];
     console.log("after:::::::::fileFormate>>>>>>.", fileName)
 
     let result = await downloadFileAPI(fileName);
-    console.log(">>>>>>>>result", result)
     if (result) {
-      console.log('>>download-file-result: ', result);
       const url = window.URL.createObjectURL(
         new Blob([result]),
       );
@@ -208,33 +197,20 @@ class AudioAndFileManagement extends Component {
         'download',
         fileName,
       )
-      // Append to html link element page
       document.body.appendChild(link);
-
-      // Start download
       link.click();
-
-      // // Clean up and remove the link
-      // link.parentNode.removeChild(link);
       notify.success('Successfully downloaded your file!');
     } else {
       notify.error((result.data || 'Something went wrong while downloading the file'));
     }
   }
 
-  handleDownloadDocxFile = async (file) => {
-    // const { selectedFileContent } = this.state;
-    let fileFormate = '';
-    fileFormate = JSON.stringify(file);
-    console.log("file", fileFormate)
-    // console.log("before:::fileFormate::::::",fileFormate)
-    fileFormate = fileFormate.split("filename=")[1].split('"')[0];
-    console.log("after:::::::::fileFormate>>>>>>.", fileFormate)
-
-    let result = await downloadFileAPI(fileFormate);
-    console.log(">>>>>>>>result", result)
+  handleDownloadDocxFile = async (fileDownloadUrl) => {
+    console.log("file", fileDownloadUrl)
+    const url = new URL(fileDownloadUrl || '');
+    const fileName = url.searchParams.get('filename');
+    let result = await downloadFileAPI(fileName);
     if (result) {
-      console.log('>>download-file-result: ', result);
       const url = window.URL.createObjectURL(
         new Blob([result]),
       );
@@ -242,51 +218,10 @@ class AudioAndFileManagement extends Component {
       link.href = url;
       link.setAttribute(
         'download',
-        fileFormate,
+        fileName,
       )
-      // Append to html link element page
       document.body.appendChild(link);
-
-      // Start download
       link.click();
-
-      // // Clean up and remove the link
-      // link.parentNode.removeChild(link);
-      notify.success('Successfully downloaded your file!');
-    } else {
-      notify.error((result.data || 'Something went wrong while downloading the file'));
-    }
-  }
-
-  handleDownloadErrorFile = async (file) => {
-    // const { selectedFileContent } = this.state;
-    console.log("file", file)
-    let fileFormate = '';
-    fileFormate = JSON.stringify(file);
-    // console.log("before:::fileFormate::::::",fileFormate)
-    fileFormate = fileFormate.split("filename=")[1].split('"')[0];
-    // let FileName = fileFormate.split(".wav")[0];
-    // fileFormate = file.split('/').reverse()[0];
-    console.log("after:::::::::fileFormate>>>>>>.", fileFormate)
-
-    let result = await downloadFileAPI(fileFormate);
-    console.log(">>>>>>>>result", result)
-    if (result) {
-      console.log('>>download-file-result: ', result);
-      const url = window.URL.createObjectURL(
-        new Blob([result]),
-      );
-      const link = document.createElement('a');
-      link.href = url;
-      link.setAttribute(
-        'download',
-        fileFormate,
-      )
-      // Append to html link element page
-      document.body.appendChild(link);
-      // Start download
-      link.click();
-      // // Clean up and remove the link
       link.parentNode.removeChild(link);
       notify.success('Successfully downloaded your file!');
     } else {
@@ -294,44 +229,69 @@ class AudioAndFileManagement extends Component {
     }
   }
 
-  download_content = () => {
-    const { selectedFileContent } = this.state;
-    return (
-      <>
-        <DialogTitle> Which one you want to download? </DialogTitle>
-        <DialogContent>
-          <div style={{ display: 'flex', flexDirection: 'column', alignContent: 'space-around' }}>
-            {
-              !(selectedFileContent || {}).description ? (
-                <>
-                  <CreateDownloadButton
-                    buttonName={'Audio File'}
-                    handleOnClick={this.downloadAudioFile}
-                  />
-                  <CreateDownloadButton
-                    buttonName={'Text File'}
-                    handleOnClick={this.downloadTextFile}
-                  />
-                </>
-              ) : (
-                <CreateDownloadButton
-                  buttonName={'Error File'}
-                  handleOnClick={this.downloadErrorFile}
-                />
-              )
-            }
-
-          </div>
-
-        </DialogContent>
-        <DialogActions>
-          <Button variant={'contained'} onClick={this.handle_Download_File_RequestClose} color="primary">
-            Cancel
-          </Button>
-        </DialogActions>
-      </>
-    )
+  handleDownloadErrorFile = async (fileDownloadUrl) => {
+    const url = new URL(fileDownloadUrl || '');
+    const fileName = url.searchParams.get('filename');
+    console.log("after:::::::::fileFormate>>>>>>.", fileName)
+    let result = await downloadFileAPI(fileName);
+    if (result) {
+      // console.log('>>download-file-result: ', result);
+      const url = window.URL.createObjectURL(
+        new Blob([result]),
+      );
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute(
+        'download',
+        fileName,
+      )
+      document.body.appendChild(link);
+      link.click();
+      link.parentNode.removeChild(link);
+      notify.success('Successfully downloaded your file!');
+    } else {
+      notify.error((result.data || 'Something went wrong while downloading the file'));
+    }
   }
+
+  // download_content = () => {
+  //   const { selectedFileContent } = this.state;
+  //   return (
+  //     <>
+  //       <DialogTitle> Which one you want to download? </DialogTitle>
+  //       <DialogContent>
+  //         <div style={{ display: 'flex', flexDirection: 'column', alignContent: 'space-around' }}>
+  //           {
+  //             !(selectedFileContent || {}).description ? (
+  //               <>
+  //                 <CreateDownloadButton
+  //                   buttonName={'Audio File'}
+  //                   handleOnClick={this.downloadAudioFile}
+  //                 />
+  //                 <CreateDownloadButton
+  //                   buttonName={'Text File'}
+  //                   handleOnClick={this.downloadTextFile}
+  //                 />
+  //               </>
+  //             ) : (
+  //               <CreateDownloadButton
+  //                 buttonName={'Error File'}
+  //                 handleOnClick={this.downloadErrorFile}
+  //               />
+  //             )
+  //           }
+
+  //         </div>
+
+  //       </DialogContent>
+  //       <DialogActions>
+  //         <Button variant={'contained'} onClick={this.handle_Download_File_RequestClose} color="primary">
+  //           Cancel
+  //         </Button>
+  //       </DialogActions>
+  //     </>
+  //   )
+  // }
 
   deleteItem_content = (
     <>
@@ -440,11 +400,11 @@ class AudioAndFileManagement extends Component {
                     let rowBgColor = (i % 2 === 0) ? 'inherit' : 'lightgrey';
                     return (
                       <TableRow key={obj.id} style={{ backgroundColor: rowBgColor }}>
-                        <TableCell><a onClick={(e) => this.handleUserDetails(obj.user_id)}>{(obj.user_id == 0) ? 'UNKNOWN' : obj.user_id}</a></TableCell>
+                        <TableCell><a onClick={(e) => this.handleUserDetails(obj.user_id)} style={{ cursor: "pointer"}}>{(obj.user_id == 0) ? 'UNKNOWN' : obj.user_id}</a></TableCell>
                         <TableCell>{obj.wav_file_path ? (this.getFileNameFromUrl(obj.wav_file_path) || 'N/A') : "Empty"}</TableCell>
-                        <TableCell>{this.getFileNameFromUrl(obj.wav_file_path) ? <CloudDownload key={obj.id} onClick={(e) => this.handleDownloadWavFile(obj.wav_file_path)} style={{ color: "#9370DB" }} /> : "N/A"}</TableCell>
-                        <TableCell>{this.getFileNameFromUrl(obj.text_file_path) ? <CloudDownload onClick={(e) => this.handleDownloadDocxFile(obj.text_file_path)} style={{ color: "#9370DB" }} /> : "N/A"}</TableCell>
-                        <TableCell>{this.getFileNameFromUrl(obj.error_file_path) ? <CloudDownload onClick={(e) => this.handleDownloadErrorFile(obj.error_file_path)} style={{ color: "#9370DB" }} /> : "N/A"}</TableCell>
+                        <TableCell>{this.getFileNameFromUrl(obj.wav_file_path) ? <CloudDownload key={obj.id} onClick={(e) => this.handleDownloadWavFile(obj.wav_file_path)} style={{ color: "#9370DB", cursor: "pointer" }} /> : "N/A"}</TableCell>
+                        <TableCell>{this.getFileNameFromUrl(obj.text_file_path) ? <CloudDownload onClick={(e) => this.handleDownloadDocxFile(obj.text_file_path)} style={{ color: "#9370DB", cursor: "pointer" }} /> : "N/A"}</TableCell>
+                        <TableCell>{this.getFileNameFromUrl(obj.error_file_path) ? <CloudDownload onClick={(e) => this.handleDownloadErrorFile(obj.error_file_path)} style={{ color: "#9370DB", cursor: "pointer" }} /> : "N/A"}</TableCell>
                           <TableCell> {obj.description} </TableCell>
                         <TableCell
                           // align="center"
