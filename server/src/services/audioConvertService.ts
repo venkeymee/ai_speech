@@ -93,7 +93,7 @@ export class audioConvertServices {
          */
         const textFilePath = process.env.HOST_URL + (path.format({ ...path.parse(audioRequest.wav_file_path), base: undefined, ext: '.docx' }).split('ai_audios\\')[1]);
         // console.log("textfilepath.",textFilePath);
-        // console.log("existssync",(fs.existsSync(textFilePath)));
+        // // console.log("existssync",(fs.existsSync(textFilePath)));
         // if(!(fs.existsSync(textFilePath))){
         //     audioRequest.wav_file_path = process.env.HOST_URL + ((audioRequest.wav_file_path).split('ai_audios\\')[1]);
         //     audioRequest.error_file_path = process.env.HOST_URL + ((audioRequest.error_file_path).split('ai_audios\\')[1]);

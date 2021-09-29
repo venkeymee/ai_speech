@@ -22,9 +22,9 @@ import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
 import { AnyARecord } from 'dns';
 
-const drawerWidth = 240;
+const drawerWidth = 300;
 
-const useStyles = makeStyles((theme: Theme) =>
+const useStyles = makeStyles((theme) =>
   createStyles({
     root: {
       display: 'flex',
@@ -93,22 +93,22 @@ const useStyles = makeStyles((theme: Theme) =>
 
 
 
-export default function SideBar(props: any) {
+export default function SideBar(props) {
   const { handleDrawerClose, open, routes, color } = props;
   const classes = useStyles();
   const theme = useTheme();
   const location = useLocation();
   const [selectedDropDown, setSelectedDropDown] = React.useState(true);
 
-  const activeRoute = (routeName: string) => {
+  const activeRoute = (routeName) => {
     return location.pathname.indexOf(routeName) > -1 ? "active" : "";
   };
 
-  const handleClick = (e: any, path: string) => {
+  const handleClick = (e, path) => {
     props.history.push(path);
   }
 
-  const handleDropDown = (e: any, dropDownName: any) => {
+  const handleDropDown = (e, dropDownName) => {
     setSelectedDropDown(dropDownName);
   };
 
@@ -116,7 +116,7 @@ export default function SideBar(props: any) {
     <>
       <List>
         {
-          (routes || []).map((route: any, index: number) => {
+          (routes || []).map((route, index) => {
             let open = (selectedDropDown === route.name);
             if (!route.childRoutes) {
               return (
@@ -129,7 +129,15 @@ export default function SideBar(props: any) {
                     handleDropDown(e, route.name);
                   }}
                 >
-                  <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
+                  <ListItemIcon>
+                    {
+                      (route.icon) ? (
+                        route.icon
+                      ) : (
+                        index % 2 === 0 ? <InboxIcon /> : <MailIcon />
+                      )
+                    }
+                  </ListItemIcon>
                   <ListItemText primary={route.name} />
                 </ListItem>
               )
@@ -152,7 +160,7 @@ export default function SideBar(props: any) {
                   <Collapse in={open} timeout="auto" unmountOnExit>
                     <List component="div" disablePadding>
                       {
-                        (route.childRoutes || []).map((childRoute: any) => (
+                        (route.childRoutes || []).map((childRoute) => (
                           <ListItem
                             key={childRoute.path}
                             button

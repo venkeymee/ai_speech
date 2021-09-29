@@ -138,13 +138,20 @@ class UserManagement extends Component {
     });
   }
 
-  deleteForm_YesConfirm = (e) => {
+  deleteForm_YesConfirm = async(e) => {
     const { id } = e.currentTarget;
     console.log('deleting-userId: ', this.state.selectedDeleteId);
-    // integrate with Delete-API
+    let res = await deleteUserInfoByIdAPI(this.state.selectedDeleteId);
+    if(res && res.data && res.status == 200){
+     // integrate with Delete-API
+     notify.success("Successfully deleted user!")
     this.setState({
       deleteItem_DialogOpen: false,
     });
+    this.getUserInfo();
+    } else{
+      notify.error(res.message ||'Something went wrong while deleting user' )
+    }
   }
   deleteForm_NoConfirm = (e) => {
     const { id } = e.currentTarget;

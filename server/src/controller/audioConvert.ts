@@ -64,7 +64,7 @@ router.get('/download', async (req, res) => {
             res.status(500).send({status :500,
                 message: '' + filename + ' file not found!',
             });
-    }
+    }   
 });
 });
 
@@ -80,7 +80,7 @@ router.get('/all-audios', async (req, res) => {
 })
 
 router.post('/delete-audio', async (req, res) => {
-    const audio = req.body.id;
+    const audio : any = req.query.id;
     const result = await audioConvertServicess.delteAudio(audio)
     return apiResponses(result,res,RESPONSEMSG.DELETE_SUCCESS);
 })

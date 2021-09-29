@@ -30,7 +30,8 @@ export function fetchAllFilesAPI() {
 }
 
 export function downloadFileAPI(fileName) {
-	return axios.get(`${baseURL}/audio/download?filename=${fileName}`)
+	return axios.get(`${baseURL}/audio/download?filename=${fileName}`,{method: 'GET',
+	responseType: 'blob'})
 		.then(function (response) {
 			// handle success
 			const {data} = response;
@@ -39,6 +40,21 @@ export function downloadFileAPI(fileName) {
 		.catch(function (error) {
 			// handle error
 			console.log('error: ', error);
+			return error.response && error.response.data;
+		})
+}
+
+
+export function deletAudioByIdAPI(audioId) {
+	return axios.post(`${baseURL}/audio/delete-audio?id=${audioId}`)
+		.then(function (response) {
+			// handle success
+			const {data} = response;
+			return data || {};
+		})
+		.catch(function (error) {
+			// handle error
+			console.log(error);
 			return error.response && error.response.data;
 		})
 }

@@ -60,7 +60,7 @@ export class UserService {
             if (res) {
                 return res.dataValues;
             } else {
-                return {status:422 ,data : "user is does not exist!"};
+                return {status:422 ,data : "user does not exist!"};
             }
         } catch (e) {
             return catchError(e, "userservice", "findUserById");
