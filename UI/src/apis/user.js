@@ -31,7 +31,7 @@ export function signUpAPI(payload) {
 }
 
 export function getUserInfoByIdAPI(userId, payload) {
-	return axios.get(`${baseURL}/user/${userId}`, payload)
+	return axios.get(`${baseURL}/user/userbyid?id=${userId}`, payload)
 		.then(function (response) {
 			// handle success
 			const {data} = response;
@@ -45,7 +45,7 @@ export function getUserInfoByIdAPI(userId, payload) {
 }
 
 export function deleteUserInfoByIdAPI(userId) {
-	return axios.delete(`${baseURL}/user/${userId}`)
+	return axios.post(`${baseURL}/user/delete-user?id=${userId}`)
 		.then(function (response) {
 			// handle success
 			const {data} = response;

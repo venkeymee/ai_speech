@@ -12,6 +12,7 @@ import {
   Menu,
   MenuItem,
   Button,
+  CssBaseline
 } from '@material-ui/core';
 import MailIcon from '@material-ui/icons/Mail';
 import NotificationsIcon from '@material-ui/icons/Notifications';
@@ -109,7 +110,7 @@ const useStyles = makeStyles((theme) =>
 export default function TopNavBar(props) {
   const userInfo = getUserData && getUserData();
   // console.log("TopNavbar-userInfo: ", userInfo);
-  const { handleDrawerOpen, open } = props;
+  const { handleDrawerOpen,  open, handleDrawerToggle } = props;
   const { isAdmin } = userInfo || {};
   
   let routesToBeRendered = [];
@@ -223,42 +224,20 @@ export default function TopNavBar(props) {
         </IconButton>
         <p>Notifications</p>
       </MenuItem> */}
-      {
-        (routesToBeRendered || []).map((item) => {
-          let navPath = (props.match.path + item.layout + item.path);
-          // console.log(">>navPath: ", navPath);
-          return (
-            <MenuItem
-              id={navPath}
-              key={navPath}
-              onClick={handleNavigation}
-              // variant={'outlined'}
-              // style={{
-              //   marginLeft: '5px',
-              //   border: '1px solid rgba(0, 0, 0, 0.23)',
-              //   borderRadius: '10px',
-              //   borderColor: 'white',
-              //   color: 'white'
-              // }}
-            >
-              {item.name}
-            </MenuItem>
-          )
-        })
-      }
-      <MenuItem 
+      {/* <MenuItem 
         onClick={handleProfileMenuOpen}
       >
-        {/* <IconButton
+        <IconButton
           aria-label="account of current user"
           aria-controls="primary-search-account-menu"
           aria-haspopup="true"
           color="inherit"
         >
           <AccountCircle />
-        </IconButton> */}
+        </IconButton>
         <p>Profile</p>
-      </MenuItem>
+      </MenuItem> */}
+      <MenuItem onClick={handleLogout}>Log Out</MenuItem>
     </Menu>
   );
 
@@ -292,6 +271,7 @@ export default function TopNavBar(props) {
 
   return (
     <>
+      <CssBaseline />
       <AppBar
         position="fixed"
         className={clsx(classes.appBar, {
@@ -300,17 +280,17 @@ export default function TopNavBar(props) {
         style={{ backgroundColor: (theam?.defaultTheam?.backgroundColor || 'green') }}
       >
         <Toolbar>
-          {/* <IconButton
+          <IconButton
             color="inherit"
             aria-label="open drawer"
-            onClick={handleDrawerOpen}
+            onClick={handleDrawerToggle}
             edge="start"
             className={clsx(classes.menuButton, {
               [classes.hide]: open,
             })}
           >
             <MenuIcon />
-          </IconButton> */}
+          </IconButton>
           <Typography variant="h6" noWrap>
             {props.title || 'Project Title'}
           </Typography>
@@ -325,7 +305,7 @@ export default function TopNavBar(props) {
       >
         {(role === 'user') ? 'User Actions' : 'Admin Actions'}
       </Button> */}
-            <RenderActionMenu {...props}/>
+            {/* <RenderActionMenu {...props}/> */}
             {/* <IconButton aria-label="show 4 new mails" color="inherit">
               <Badge badgeContent={4} color="secondary">
                 <MailIcon />

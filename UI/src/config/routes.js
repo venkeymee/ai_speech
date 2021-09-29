@@ -3,6 +3,12 @@ import UserDashboard  from '../containers/UserDashboard';
 import SpeechToText  from '../containers/SpeechToText';
 import UserManagement  from '../containers/UserManagement';
 import AudioAndFileManagement  from '../containers/AudioAndTextFileManagement';
+import AccountBoxIcon from '@material-ui/icons/AccountBox';
+import DescriptionIcon from '@material-ui/icons/Description';
+import SettingsVoiceIcon from '@material-ui/icons/SettingsVoice';
+import FileCopyIcon from '@material-ui/icons/FileCopy';
+
+/** Constants */
 const AUDIO_AND_TEXT_FILEMANAGEMENT_SCREEN_PATH = '/admininfo';
 const USER_MANAGEMENT_SCREEN_PATH = '/user-management';
 const SPEECH_TO_TEXT_SCREEN_PATH = '/speech-to-text'
@@ -18,13 +24,15 @@ export const adminRoutes = [
         component: AudioAndFileManagement,
         name: 'Audio & Text File Management',
         path: AUDIO_AND_TEXT_FILEMANAGEMENT_SCREEN_PATH,
-        layout: '/admin'
+        layout: '/admin',
+        icon: <FileCopyIcon/>,
     },
     {
         component: UserManagement,
         name: 'User Management',
         path: USER_MANAGEMENT_SCREEN_PATH,
-        layout: '/admin'
+        layout: '/admin',
+        icon: <AccountBoxIcon/>,
     }
 ]
 
@@ -39,7 +47,8 @@ export const userRoutes = [
         component: SpeechToText,
         name: 'Speech To Text',
         path: SPEECH_TO_TEXT_SCREEN_PATH,
-        layout: '/user'
+        layout: '/user',
+        icon: <SettingsVoiceIcon/>,
     }
 
 ]

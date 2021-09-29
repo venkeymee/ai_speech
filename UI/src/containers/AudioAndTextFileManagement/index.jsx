@@ -21,9 +21,14 @@ import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
 import { fetchAllFiles } from './redux/actions';
 import { dummyData } from './dummyData';
-import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
-import { fetchAllFilesAPI, downloadFileAPI } from '../../apis/audioAndTextFileManager';
+// import CloudDownload from '@mui/icons-material/CloudDownload';
+import CloudDownload from "@material-ui/icons/CloudDownload"
+import { fetchAllFilesAPI, downloadFileAPI, deletAudioByIdAPI } from '../../apis/audioAndTextFileManager';
 import { downloadData } from '../../utils';
+import { getUserInfoByIdAPI } from '../../apis/user';
+import UserForm from './UserForm.jsx';
+// import ReactAudioPlayer from 'react-audio-player';
+import axios from 'axios';
 
 const columnData = [
   {
@@ -94,11 +99,18 @@ class AudioAndFileManagement extends Component {
       addForm_DialogOpen: false,
       isAddFormSubmitDisabled: false,
       isEditFormSubmitDisabled: false,
+      getUserForm_DialogOpen: false
     };
   }
 
   async componentDidMount() {
-    let result = await this.props.fetchAllFiles();
+  }
+  async componentDidMount() {
+    // const {dispatch} = this.props;
+    this.getAllFilesInfo();
+  }
+  async getAllFilesInfo() {
+    let result = await fetchAllFilesAPI();
     // console.log('>>fetchUserList-result: ', result);
     if (result && result.status == 200) {
       this.setState({
@@ -135,13 +147,21 @@ class AudioAndFileManagement extends Component {
     });
   }
 
-  deleteForm_YesConfirm = (e) => {
+  deleteForm_YesConfirm = async (e) => {
     const { id } = e.currentTarget;
     console.log('deleting-userId: ', this.state.selectedDeleteId);
+    let res = await deletAudioByIdAPI(this.state.selectedDeleteId);
+    console.log("result",res);
     // integrate with Delete-API
-    this.setState({
-      deleteItem_DialogOpen: false,
-    });
+    if(res && res.data && res.status == 200){
+      notify.success("successfully deleted audio files")
+      this.setState({
+        deleteItem_DialogOpen: false,
+      });
+      this.getAllFilesInfo()
+    } else {
+     notify.error(res.message || "Something went wrong while deleteing audio files!")
+    }
   }
   deleteForm_NoConfirm = (e) => {
     const { id } = e.currentTarget;
@@ -154,48 +174,110 @@ class AudioAndFileManagement extends Component {
   handle_Delete_Item_RequestClose = () => {
 
   }
-  downloadAudioFile = async () => {
-    const { selectedFileContent } = this.state;
-    const { wav_file_path } = selectedFileContent || {};
-    const fileName = (wav_file_path || '').split('/').reverse()[0];
-    let result = await downloadFileAPI(fileName);
-    console.log('>>download-file-result: ', result);
-    if (result && result.status == 200) {
-      this.setState({
-        download_File_DialogOpen: false,
-      });
+  handleDownloadWavFile = async (file) => {
+    // const { selectedFileContent } = this.state;
+    console.log("file", file)
+    let fileFormate = '';
+    fileFormate = JSON.stringify(file);
+    // console.log("before:::fileFormate::::::",fileFormate)
+    fileFormate = fileFormate.split("filename=")[1].split('"')[0];
+    // let FileName = fileFormate.split(".wav")[0];
+    // fileFormate = file.split('/').reverse()[0];
+    console.log("after:::::::::fileFormate>>>>>>.", fileFormate)
+
+    let result = await downloadFileAPI(fileFormate);
+    console.log(">>>>>>>>result", result)
+    if (result) {
+      console.log('>>download-file-result: ', result);
+      const url = window.URL.createObjectURL(
+        new Blob([result]),
+      );
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute(
+        'download',
+        fileFormate,
+      )
+      // Append to html link element page
+      document.body.appendChild(link);
+
+      // Start download
+      link.click();
+
+      // // Clean up and remove the link
+      // link.parentNode.removeChild(link);
       notify.success('Successfully downloaded your file!');
     } else {
       notify.error((result.data || 'Something went wrong while downloading the file'));
     }
   }
 
-  downloadTextFile = async () => {
-    const { selectedFileContent } = this.state;
-    const { text_file_path } = selectedFileContent || {};
-    const fileName = (text_file_path || '').split('/').reverse()[0];
-    let result = await downloadFileAPI(fileName);
-    console.log('>>download-file-result: ', result);
-    if (result && result.status == 200) {
-      this.setState({
-        download_File_DialogOpen: false,
-      });
+  handleDownloadDocxFile = async (file) => {
+    // const { selectedFileContent } = this.state;
+    let fileFormate = '';
+    fileFormate = JSON.stringify(file);
+    console.log("file", fileFormate)
+    // console.log("before:::fileFormate::::::",fileFormate)
+    fileFormate = fileFormate.split("filename=")[1].split('"')[0];
+    console.log("after:::::::::fileFormate>>>>>>.", fileFormate)
+
+    let result = await downloadFileAPI(fileFormate);
+    console.log(">>>>>>>>result", result)
+    if (result) {
+      console.log('>>download-file-result: ', result);
+      const url = window.URL.createObjectURL(
+        new Blob([result]),
+      );
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute(
+        'download',
+        fileFormate,
+      )
+      // Append to html link element page
+      document.body.appendChild(link);
+
+      // Start download
+      link.click();
+
+      // // Clean up and remove the link
+      // link.parentNode.removeChild(link);
       notify.success('Successfully downloaded your file!');
     } else {
       notify.error((result.data || 'Something went wrong while downloading the file'));
     }
   }
 
-  downloadErrorFile = async () => {
-    const { selectedFileContent } = this.state;
-    const { error_file_path } = selectedFileContent || {};
-    const fileName = (error_file_path || '').split('/').reverse()[0];
-    let result = await downloadFileAPI(fileName);
-    console.log('>>download-file-result: ', result);
-    if (result && result.status == 200) {
-      this.setState({
-        download_File_DialogOpen: false,
-      });
+  handleDownloadErrorFile = async (file) => {
+    // const { selectedFileContent } = this.state;
+    console.log("file", file)
+    let fileFormate = '';
+    fileFormate = JSON.stringify(file);
+    // console.log("before:::fileFormate::::::",fileFormate)
+    fileFormate = fileFormate.split("filename=")[1].split('"')[0];
+    // let FileName = fileFormate.split(".wav")[0];
+    // fileFormate = file.split('/').reverse()[0];
+    console.log("after:::::::::fileFormate>>>>>>.", fileFormate)
+
+    let result = await downloadFileAPI(fileFormate);
+    console.log(">>>>>>>>result", result)
+    if (result) {
+      console.log('>>download-file-result: ', result);
+      const url = window.URL.createObjectURL(
+        new Blob([result]),
+      );
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute(
+        'download',
+        fileFormate,
+      )
+      // Append to html link element page
+      document.body.appendChild(link);
+      // Start download
+      link.click();
+      // // Clean up and remove the link
+      link.parentNode.removeChild(link);
       notify.success('Successfully downloaded your file!');
     } else {
       notify.error((result.data || 'Something went wrong while downloading the file'));
@@ -259,16 +341,59 @@ class AudioAndFileManagement extends Component {
       </DialogActions>
     </>
   );
-  handleDownloadWavFile = (obj) => {
-    return downloadData(obj);
-    // console.log(" data",data)
+  // handleDownloadWavFile = (obj) => {
+  //   return downloadData(obj);
+  //   // console.log(" data",data)
+  // }
+  // handleDownloadDocxFile = (obj) =>{
+  //   return downloadData(obj);
+  // }
+
+  handleUserDetails = async (id) => {
+    let res = await getUserInfoByIdAPI(id);
+    // console.log("id>>>>>",id.e);
+    // console.log("res:::::",res);
+    if (res && res.data && res.status == 200) {
+      notify.success("successfully show the user data!")
+      this.setState({
+        getUserForm_DialogOpen: true,
+        formData: res.data || {}
+      })
+    } else {
+      notify.error(res.message || 'Something went wrong while show the user data!')
+    }
   }
-  handleDownloadDocxFile = (obj) =>{
-    return downloadData(obj);
+  handleAddDataRequestClose = () => {
+    this.setState({
+      getUserForm_DialogOpen: false,
+      formData: {}
+    })
+  }
+  getFormContent = () => {
+    return (
+      <UserForm
+        formTitle={'User Data'}
+        // isItEditForm={false}
+        // isItEditMode={false}
+        // errors={state.errors}
+        formData={this.state.formData || {}}
+        doesFormDialogOpen={this.state.getUserForm_DialogOpen}
+
+        // handleSubmitButton={this.handleAddDataRequest}
+        handleCancelButton={this.handleAddDataRequestClose}
+      // handleInputChange={this.handleInputChange}
+      // isEditFormSubmitDisabled={this.state.isAddFormSubmitDisabled}
+      />
+    )
   }
   render() {
     return (
       <div>
+        <div>
+          {
+            !(this.state.getUserForm_DialogOpen) ? ('') : (this.getFormContent())
+          }
+        </div>
         <Paper elevation={3} style={{ margin: '20px', padding: '10px', display: "flex", justifyContent: 'space-between', alignItems: 'center' }}>
           <b> Audio & Text File Management </b>
         </Paper>
@@ -294,25 +419,22 @@ class AudioAndFileManagement extends Component {
                     let rowBgColor = (i % 2 === 0) ? 'inherit' : 'lightgrey';
                     return (
                       <TableRow key={obj.id} style={{ backgroundColor: rowBgColor }}>
-                        <TableCell> {(obj.user_id == 0) ? 'UNKNOWN' : obj.user_id} </TableCell>
-                        {/* <TableCell> {obj.wav_file_path} </TableCell> */}
-                        {/* <TableCell>{obj.wav_file_path? <button><CloudDownloadIcon onClick={ (e) => this.handleDownloadWavFile({e :obj.wav_file_path})} style={{color : "blue"}} /></button> : "File Not Here"}</TableCell> */}
-                        {/* <TableCell>{obj.text_file_path == " " ?  "File Not Here" : <button><CloudDownloadIcon onClick={ (e) => this.handleDownloadDocxFile({e :obj.text_file_path})} style={{color : "blue"}}/></button>}</TableCell> */}
-                        <TableCell> {obj.wav_file_path} </TableCell>
-                        <TableCell> {obj.text_file_path} </TableCell>
-                        <TableCell> {obj.error_file_path} </TableCell>
-                        <TableCell> {obj.description} </TableCell>
+                        <TableCell><button onClick={(e) => this.handleUserDetails(obj.user_id)}>{(obj.user_id == 0) ? 'UNKNOWN' : obj.user_id}</button></TableCell>
+                        <TableCell>{obj.wav_file_path ? <CloudDownload onClick={(e) => this.handleDownloadWavFile(obj.wav_file_path)} style={{ color: "#9370DB" }} /> : "Empty"}</TableCell>
+                        <TableCell>{obj.text_file_path == " " ? "Empty" : <CloudDownload onClick={(e) => this.handleDownloadDocxFile(obj.text_file_path)} style={{ color: "#9370DB" }} />}</TableCell>
+                        <TableCell>{obj.error_file_path == "" ? "Empty" : <CloudDownload onClick={(e) => this.handleDownloadErrorFile(obj.error_file_path)} style={{ color: "#9370DB" }} />}</TableCell>
+                          <TableCell> {obj.description} </TableCell>
                         <TableCell
                           // align="center"
                           width="20%"
                           padding="none"
                         >
-                          <IconButton
+                          {/* <IconButton
                             id={obj.id}
                             onClick={(e) => this.onTableRowFileDonwloadButtonClick(e)}
                           >
                             <EditIcon color="primary" />
-                          </IconButton>
+                          </IconButton> */}
                           <IconButton
                             id={obj.id}
                             onClick={(e) => this.onTableDeleteButtonClick(e)}

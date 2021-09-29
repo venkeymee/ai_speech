@@ -58,13 +58,13 @@ router.post('/upload_audio_file', async (req: ICustomRequest, res) => {
 
 router.get('/download', async (req, res) => {
     const filename: any = req.query.filename;
-    const directoryPath = path.join(__dirname, '../../tempuploads/');
+    const directoryPath = path.join(__dirname, '../../ai_audios/');
     res.download(directoryPath + filename, filename, (err) => {
         if (err) {
             res.status(500).send({status :500,
                 message: '' + filename + ' file not found!',
             });
-    }
+    }   
 });
 });
 
@@ -80,7 +80,7 @@ router.get('/all-audios', async (req, res) => {
 })
 
 router.post('/delete-audio', async (req, res) => {
-    const audio = req.body.id;
+    const audio : any = req.query.id;
     const result = await audioConvertServicess.delteAudio(audio)
     return apiResponses(result,res,RESPONSEMSG.DELETE_SUCCESS);
 })

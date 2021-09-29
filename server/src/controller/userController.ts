@@ -54,7 +54,7 @@ router.get('/all-users', async (req, res) => {
 })
 
 router.post('/delete-user', async (req, res) => {
-    const user = req.body.id;
+    const user : any = req.query.id;
     const result = await userservice.delteUser(user)
     return apiResponses(result,res,RESPONSEMSG.DELETE_SUCCESS);
 })

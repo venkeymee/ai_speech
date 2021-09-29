@@ -81,7 +81,6 @@ class LogIn extends Component {
               onChange={(e) => this.handleOnChange(e)}
               value={password || ''}
               required={true}
-              autoFocus={true}
               fullWidth={true}
             />
           </div>

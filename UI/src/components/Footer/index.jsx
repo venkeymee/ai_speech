@@ -4,6 +4,7 @@ import AppBar from '@material-ui/core/AppBar';
 import { AppRootContext } from '../../contexts/AppRoot';
 
 export default function Footer(props) {
+  const {open} = props;
   const theam = useContext(AppRootContext);
   // return (
   //   <AppBar
@@ -30,7 +31,8 @@ export default function Footer(props) {
         height: "5vh",
         position: 'fixed',
         bottom: '0px',
-        width: '100%'
+        width: '100%',
+        left: open ? '300px' : '75px'
       }}
     >
       <span className="d-inline-block" >Copyright. &copy; {new Date().getFullYear()}</span>

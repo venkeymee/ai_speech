@@ -9,11 +9,11 @@
     align-items: center;
     background-image:  url('speechToText.jpg');
     background-repeat: no-repeat;
-    background-size: cover;
+    background-size: 100% 100%;
 }
 
 .LoginForm {
-    width: 40%;
+    width: 300px;
     border: 1px solid gray;
     background-color: white;
     border-radius: 20px;
