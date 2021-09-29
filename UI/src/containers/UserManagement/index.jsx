@@ -49,7 +49,7 @@ const columnData = [
     id: "email",
     align: "left",
     disablePadding: true,
-    label: "E-mail Id",
+    label: "User Name",
     //   width: "40%"
   },
   {

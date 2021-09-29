@@ -66,7 +66,7 @@ export default function UserForm(props) {
               required
               id="email"
               className="mb-3"
-              label="E-mail Id"
+              label="User Name"
               name="email"
               onChange={(e) => handleInputChange(e)}
               value={formData.email}

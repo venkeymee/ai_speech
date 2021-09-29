@@ -70,7 +70,7 @@ const columnData = [
     id: "description",
     align: "left",
     disablePadding: true,
-    label: "Error Description",
+    label: "Description",
     //   width: "40%"
   },
   {
@@ -382,7 +382,7 @@ class AudioAndFileManagement extends Component {
   getFormContent = () => {
     return (
       <UserForm
-        formTitle={'User Data'}
+        formTitle={'User'}
         // isItEditForm={false}
         // isItEditMode={false}
         // errors={state.errors}
