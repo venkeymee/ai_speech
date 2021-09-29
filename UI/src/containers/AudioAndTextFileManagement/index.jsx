@@ -42,6 +42,13 @@ const columnData = [
     id: "wav_file_path",
     align: "left",
     disablePadding: true,
+    label: "File Name",
+    //   width: "40%"
+  },
+  {
+    id: "wav_file_path",
+    align: "left",
+    disablePadding: true,
     label: "Audio file",
     //   width: "40%"
   },
@@ -174,18 +181,21 @@ class AudioAndFileManagement extends Component {
   handle_Delete_Item_RequestClose = () => {
 
   }
-  handleDownloadWavFile = async (file) => {
+  handleDownloadWavFile = async (fileDownloadUrl) => {
     // const { selectedFileContent } = this.state;
-    console.log("file", file)
-    let fileFormate = '';
-    fileFormate = JSON.stringify(file);
+    console.log("file", fileDownloadUrl)
+    // let url = '';
+    // url = JSON.stringify(file);
+    const url = new URL(fileDownloadUrl || '');
+    const fileName = url.searchParams.get('filename');
     // console.log("before:::fileFormate::::::",fileFormate)
-    fileFormate = fileFormate.split("filename=")[1].split('"')[0];
+    // fileFormate = fileFormate.split("filename=")[1].split('"')[0];
+    // if(file)
     // let FileName = fileFormate.split(".wav")[0];
     // fileFormate = file.split('/').reverse()[0];
-    console.log("after:::::::::fileFormate>>>>>>.", fileFormate)
+    console.log("after:::::::::fileFormate>>>>>>.", fileName)
 
-    let result = await downloadFileAPI(fileFormate);
+    let result = await downloadFileAPI(fileName);
     console.log(">>>>>>>>result", result)
     if (result) {
       console.log('>>download-file-result: ', result);
@@ -196,7 +206,7 @@ class AudioAndFileManagement extends Component {
       link.href = url;
       link.setAttribute(
         'download',
-        fileFormate,
+        fileName,
       )
       // Append to html link element page
       document.body.appendChild(link);
@@ -386,6 +396,17 @@ class AudioAndFileManagement extends Component {
       />
     )
   }
+
+  getFileNameFromUrl = (url) => {
+    try {
+      const fileName = new URL(url || '').searchParams.get('filename');
+      return fileName;
+    } catch (error) {
+      // console.log("Erro: ", error);
+      return null;      
+    }
+  }
+
   render() {
     return (
       <div>
@@ -419,10 +440,11 @@ class AudioAndFileManagement extends Component {
                     let rowBgColor = (i % 2 === 0) ? 'inherit' : 'lightgrey';
                     return (
                       <TableRow key={obj.id} style={{ backgroundColor: rowBgColor }}>
-                        <TableCell><button onClick={(e) => this.handleUserDetails(obj.user_id)}>{(obj.user_id == 0) ? 'UNKNOWN' : obj.user_id}</button></TableCell>
-                        <TableCell>{obj.wav_file_path ? <CloudDownload onClick={(e) => this.handleDownloadWavFile(obj.wav_file_path)} style={{ color: "#9370DB" }} /> : "Empty"}</TableCell>
-                        <TableCell>{obj.text_file_path == " " ? "Empty" : <CloudDownload onClick={(e) => this.handleDownloadDocxFile(obj.text_file_path)} style={{ color: "#9370DB" }} />}</TableCell>
-                        <TableCell>{obj.error_file_path == "" ? "Empty" : <CloudDownload onClick={(e) => this.handleDownloadErrorFile(obj.error_file_path)} style={{ color: "#9370DB" }} />}</TableCell>
+                        <TableCell><a onClick={(e) => this.handleUserDetails(obj.user_id)}>{(obj.user_id == 0) ? 'UNKNOWN' : obj.user_id}</a></TableCell>
+                        <TableCell>{obj.wav_file_path ? (this.getFileNameFromUrl(obj.wav_file_path) || 'N/A') : "Empty"}</TableCell>
+                        <TableCell>{this.getFileNameFromUrl(obj.wav_file_path) ? <CloudDownload key={obj.id} onClick={(e) => this.handleDownloadWavFile(obj.wav_file_path)} style={{ color: "#9370DB" }} /> : "N/A"}</TableCell>
+                        <TableCell>{this.getFileNameFromUrl(obj.text_file_path) ? <CloudDownload onClick={(e) => this.handleDownloadDocxFile(obj.text_file_path)} style={{ color: "#9370DB" }} /> : "N/A"}</TableCell>
+                        <TableCell>{this.getFileNameFromUrl(obj.error_file_path) ? <CloudDownload onClick={(e) => this.handleDownloadErrorFile(obj.error_file_path)} style={{ color: "#9370DB" }} /> : "N/A"}</TableCell>
                           <TableCell> {obj.description} </TableCell>
                         <TableCell
                           // align="center"
