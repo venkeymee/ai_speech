@@ -35,6 +35,7 @@ app.use(fileUpload({
   debug:true
 }));
 
+app.use(express.static(path.join(__dirname, '../../build')));
 
 app.use('/audio', audioConvert);
 app.use('/user', userController);

@@ -1,5 +1,5 @@
 import axios from 'axios';
-const baseURL = process.env.baseURL || "http://192.168.43.62:8445";
+const baseURL = process.env.baseURL || "http://localhost:8445";
 
 export function uploadAudioFile(formData) {
 	return axios.post(`${baseURL}/audio/upload_audio_file`, formData)
