@@ -41,7 +41,7 @@ router.post('/upload_audio_file', async (req: ICustomRequest, res) => {
     let usrId=req.body.user_id || '';
     let error_file_path = req.body.error_file_path || '';
     let description = req.body.description || '';
-    Logger.info("usrId:::",uploadedfile, "uploadfile::",uploadedfile);
+    // Logger.info("usrId:::",uploadedfile, "uploadfile::",uploadedfile);
     if (!fs.existsSync(path.join(__dirname, CONST_PARAMS.AUDIO_FILE_PATH))) { mkdirSync(path.join(__dirname, CONST_PARAMS.AUDIO_FILE_PATH)) }
     Logger.info("uploadfile:::",uploadedfile)
     const filePath = path.join(__dirname, CONST_PARAMS.AUDIO_FILE_PATH.concat(uploadedfile.name));
