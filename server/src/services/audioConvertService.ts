@@ -82,28 +82,16 @@ export class audioConvertServices {
         Logger.info(":::::Converting Audio to Text file  Begin:::");
        const toolFile=path.join(__dirname, '../../../a2text/SpeechToText.exe');  
        const commond=toolFile+" "+audioRequest.wav_file_path;
-       Logger.info(":::::Execution Commond::::"+commond);
+       Logger.info(":::::Execution Commond ::::"+commond);
        try{
-        let processData=await this.CMdEexcution(commond); 
-        Logger.info(":::::Execution Commond Response Data"+processData);           
-        /**
-         * @TODO : capther the a2text exception and stored it DB.
-         *  step-1 : since it is not return any exception from command execution.
-         *  step-1 : check the docx file is existing if not write generic exception into DB.
-         */
+        let processCMDData=await this.CMdEexcution(commond); 
+        Logger.info(":::::Execution Commond Result::::"+JSON.stringify(processCMDData));
         const textFilePath = process.env.HOST_URL + (path.format({ ...path.parse(audioRequest.wav_file_path), base: undefined, ext: '.docx' }).split('ai_audios\\')[1]);
-        // console.log("textfilepath.",textFilePath);
-        // // console.log("existssync",(fs.existsSync(textFilePath)));
-        // if(!(fs.existsSync(textFilePath))){
-        //     audioRequest.wav_file_path = process.env.HOST_URL + ((audioRequest.wav_file_path).split('ai_audios\\')[1]);
-        //     audioRequest.error_file_path = process.env.HOST_URL + ((audioRequest.error_file_path).split('ai_audios\\')[1]);
-        //     const audioInfo={...audioRequest,...{text_file_path : ' ',cmdOperationData:JSON.stringify(processData)}} as Audio_To_Text_Speech;
-        //     Logger.info("AudioConvertService:audio2Text:after converting object::"+JSON.stringify(audioInfo))
-        //     Logger.info(":::::Converting Audio to Text file  END:::");
-        //     return audioInfo;        
-        //  }else{
+        let processInfo= (processCMDData.stdout) ? {text_file_path:textFilePath,error_file_path:'',description:processCMDData.stdout} as Audio_To_Text_Speech
+                                                 : {text_file_path:'',error_file_path:textFilePath,description:processCMDData.stderr} as Audio_To_Text_Speech
+                  
         audioRequest.wav_file_path = process.env.HOST_URL + ((audioRequest.wav_file_path).split('ai_audios\\')[1]);
-        const audioInfo={...audioRequest,...{text_file_path:textFilePath,cmdOperationData:JSON.stringify(processData)}} as Audio_To_Text_Speech;
+        const audioInfo={...audioRequest,...processInfo} as Audio_To_Text_Speech;
         Logger.info("AudioConvertService:audio2Text:after converting object::"+JSON.stringify(audioInfo))
         Logger.info(":::::Converting Audio to Text file  END:::");
         return audioInfo; 
