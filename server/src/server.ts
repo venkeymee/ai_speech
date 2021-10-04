@@ -10,7 +10,8 @@ import Logger from './config/winstonlogger';
 import { DataBaseConfig } from './config/dbconfig';
 import Container from 'typedi';
 import audioConvert from './controller/audioConvert';
- import userController from './controller/usercontroller';
+import userController from './controller/usercontroller';
+import https from "https";
 
 import fileUpload from 'express-fileupload';
 dotenv.config();
@@ -35,15 +36,16 @@ app.use(fileUpload({
   debug:true
 }));
 
+app.use(express.static(path.join(__dirname, '../../build')));
 
 app.use('/audio', audioConvert);
 app.use('/user', userController);
 
 
-
-
-
-app.listen(PORT, async () => {
+https.createServer({
+  key: fs.readFileSync(path.join(__dirname,'../../cert/server.key')),
+  cert: fs.readFileSync(path.join(__dirname,'../../cert/server.cert'))
+}, app).listen(PORT, async () => {
       await dbConnection.checkConnection(); 
       Logger.info(chalk.yellow(`⚡️ [server]: Server is running at ${chalk.blue(PORT)}`));
   });

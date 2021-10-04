@@ -5,7 +5,7 @@
   "main": "dist/src/server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "rm -rf dist && tsc",
+    "build": "tsc",
     "start": "nodemon src/server.ts"
   },
   "repository": {
@@ -44,6 +44,7 @@
     "morgan": "^1.10.0",
     "mysql2": "^2.3.0",
     "nodemon": "^2.0.12",
+    "pm2": "^5.1.2",
     "reflect-metadata": "^0.1.13",
     "sequelize": "^6.6.5",
     "typedi": "^0.10.0",

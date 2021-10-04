@@ -1,0 +1,1 @@
+pm2 stop dist/src/server.js
