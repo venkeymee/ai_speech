@@ -25,7 +25,7 @@ class LogIn extends Component {
     const {errorObj} = this.state;
     switch(id){
       case 'email': 
-        const regex = /^[\w]+.[\w]*@gmail.com$/;
+        const regex = /^[\w]+.[\w]*$/;
         if (!regex.test(value)) {
           errorObj[id] = `Please enter a valid ${name}`;
           this.setState({ errorObj });
@@ -50,7 +50,7 @@ class LogIn extends Component {
   handleOnChange = (e) => {
     let currentTarget =  e.currentTarget;
     const {id, value, name} = currentTarget;
-    debugger;
+    // debugger;
     this.doFieldValidation({name, id, value});
 
     this.setState({
@@ -75,7 +75,7 @@ class LogIn extends Component {
 
   handleSubmit = async (e) => {
     await this.doFormValidation();
-    debugger;
+    // debugger;
     const {email, password, errorObj} = this.state;
     if(Object.values(errorObj).length > 0){
       notify.error('Please enter the valid Username & Password!');

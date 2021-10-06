@@ -17,6 +17,10 @@ import {
   CardHeader,
   IconButton,
   Tooltip,
+  Dialog,
+DialogTitle,
+DialogContent,
+TextField,
   Zoom,
   Button
 } from '@material-ui/core';
@@ -33,6 +37,7 @@ import { Notification, notify } from '../../components/ToastNotification';
 import { uploadAudioFileAPI } from '../../apis/audioAndTextFileManager';
 import { getUserData } from '../../utils/index';
 import './styles.css';
+// import { T} from '../../components/TopNavBar';
 
 class SpeechToText extends Component {
   constructor(props) {
@@ -44,7 +49,12 @@ class SpeechToText extends Component {
       canvasWidth: 500,
       canvasHeight: 150,
       doesTheAudioFileUploaded: false,
-      doesTheDownloadButtonClose: false
+      doesTheDownloadButtonClose: false,
+      doesPageLoaderOpen: false,
+      doesTeaxtAreaOpen: false,
+      uploadFormData : {},
+      formTitle : "Converted Text From Audio",
+      getUserForm_DialogOpen : true
     }
   }
 
@@ -74,6 +84,9 @@ class SpeechToText extends Component {
   }
 
   handleFileUpload = async (e) => {
+    this.setState({
+      doesPageLoaderOpen: true
+    })
     const {audioData} = this.state;
     if(!audioData || !audioData.blob){
       return;
@@ -92,13 +105,24 @@ class SpeechToText extends Component {
     formData.append('user_id', userId);
 
     let result = await uploadAudioFileAPI(formData);
+    // let result = {status : 200}
     if(result && result.status == 200){
       this.setState({
         doesTheAudioFileUploaded: true,
-        doesTheDownloadButtonClose : true
+        doesTheDownloadButtonClose : true,
+        uploadFormData : result.data
       })
       notify.success('Your files is uploaded Successfully!! ');
+      this.setState({
+        doesPageLoaderOpen: false
+      })
+      this.setState({
+        doesTeaxtAreaOpen: true
+      })
     } else {
+      this.setState({
+        doesPageLoaderOpen: false
+      })
       result && notify.error(result.message || 'Something went wrong!');
     }
 
@@ -110,13 +134,30 @@ class SpeechToText extends Component {
     })
   }
 
+  handleAddDataRequestClose = () => {
+    this.setState({
+      doesTeaxtAreaOpen: false,
+      formData: {}
+    })
+  }
+  // getFormContent = () => {
+  //   return (
+  //     <TopNavBar
+  //       doesFormDialogOpen={this.state.getUserForm_DialogOpen}
+  //     />
+  //   )
+  // }
+
   render() {
     const {
       recordState,
       audioData,
       canvasWidth,
       canvasHeight,
-      doesTheAudioFileUploaded
+      doesTheAudioFileUploaded,
+      doesPageLoaderOpen,
+      doesTeaxtAreaOpen,
+      uploadFormData
     } = this.state;
 
     const AddTooltipEffect = (props) => {
@@ -128,6 +169,24 @@ class SpeechToText extends Component {
     }
 
     return (
+      <>
+<div>
+  {/* {this.state.getUserForm_DialogOpen? <TopNavBar handleAddDataRequestOpen={this.state.getUserForm_DialogOpen}/> : ""} */}
+ { !(doesPageLoaderOpen)? <></> : <div class="loading">Loading..</div>}
+ <Dialog
+ maxWidth="md"
+ open={doesTeaxtAreaOpen}
+ onClose={this.handleAddDataRequestClose}
+>
+ <DialogTitle style={{textAlign: "center"}}><b>{this.state.formTitle}</b></DialogTitle>
+ <DialogContent>
+    <div className="row">
+      <div className="col-lg-6">
+      <span style={{fontSize: "1.2rem"}}>
+      {(uploadFormData && uploadFormData.description) || "" }
+      </span>
+       
+      </div></div></DialogContent></Dialog>
       <Paper elevation={0} style={{padding: '20px'}}>
         {/* <TitleBar title={this.props.componentName}/> */}
         <div style={{ display: 'flex', justifyContent: "center" }}>
@@ -235,6 +294,8 @@ class SpeechToText extends Component {
           <Notification/>
         </div>
       </Paper>
+      </div>
+      </>
     )
   }
 }

@@ -25,7 +25,7 @@ export default function UserForm(props) {
       open={doesFormDialogOpen}
       onClose={handleCancelButton}
     >
-      <DialogTitle> {formTitle} </DialogTitle>
+      <DialogTitle style={{textAlign: 'center'}}> {formTitle} </DialogTitle>
       <DialogContent>
         <div className="row">
           <div className="col-lg-6">
@@ -38,6 +38,9 @@ export default function UserForm(props) {
               name="firstname"
               value={formData.firstname}
               fullWidth
+              disabled
+              style={{margin : '5px'}}
+              variant="outlined"
             />
           </div>
           <div className="col-lg-6">
@@ -49,7 +52,10 @@ export default function UserForm(props) {
               label="Last Name"
               name="lastname"
               value={formData.lastname}
+              variant="outlined"
               fullWidth
+              disabled
+              style={{margin : '5px'}}
             />
           </div>
           <div className="col-lg-6">
@@ -61,7 +67,10 @@ export default function UserForm(props) {
               label="E-mail Id"
               name="email"
               value={formData.email}
+              variant="outlined"
               fullWidth
+              disabled
+              style={{margin : '5px'}}
             />
           </div>
           {/* {
@@ -88,7 +97,11 @@ export default function UserForm(props) {
               label="Address"
               name="address"
               value={formData.address}
+              variant="outlined"
+              // aria-readonly= {true}
+              disabled
               fullWidth
+              style={{margin : '5px'}}
             />
           </div>
         </div>
