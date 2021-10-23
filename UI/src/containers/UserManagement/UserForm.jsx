@@ -27,7 +27,7 @@ export default function UserForm(props) {
       open={doesFormDialogOpen}
       onClose={handleCancelButton}
     >
-      <DialogTitle style={{textAlign: 'center'}}> {formTitle} </DialogTitle>
+      <DialogTitle> {formTitle} </DialogTitle>
       <DialogContent>
         <div className="row">
           <div className="col-lg-6">
@@ -41,8 +41,6 @@ export default function UserForm(props) {
               onChange={(e) => handleInputChange(e)}
               value={formData.firstname}
               fullWidth
-              style={{margin : '5px'}}
-              variant="outlined"
             // error={state.errors.name}
             // helperText={state.errors.name}
             />
@@ -58,8 +56,6 @@ export default function UserForm(props) {
               onChange={(e) => handleInputChange(e)}
               value={formData.lastname}
               fullWidth
-              style={{margin : '5px'}}
-              variant="outlined"
             // error={state.errors.lastname}
             // helperText={state.errors.lastname}
             />
@@ -75,8 +71,6 @@ export default function UserForm(props) {
               onChange={(e) => handleInputChange(e)}
               value={formData.email}
               fullWidth
-              style={{margin : '5px'}}
-              variant="outlined"
             // error={state.errors.email}
             // helperText={state.errors.email}
             />
@@ -94,8 +88,6 @@ export default function UserForm(props) {
                   onChange={(e) => handleInputChange(e)}
                   value={formData.password}
                   fullWidth
-                  style={{margin : '5px'}}
-                  variant="outlined"
                 // error={state.errors.password}
                 // helperText={state.errors.password}
                 />
@@ -112,8 +104,6 @@ export default function UserForm(props) {
               onChange={(e) => handleInputChange(e)}
               value={formData.address}
               fullWidth
-              style={{margin : '5px'}}
-              variant="outlined"
             // error={state.errors.address}
             // helperText={state.errors.address}
             />

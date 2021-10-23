@@ -256,7 +256,8 @@ export default class AudioReactRecorder extends React.Component {
       self.canvasCtx.stroke()
     }
 
-    draw()
+    /** This function is commenting-out, bcz of we don't want to show Autio-Echo-generation effect in UI */
+    // draw()
   }
 
   setupMic = async () => {
