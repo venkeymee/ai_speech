@@ -368,7 +368,7 @@ export default class AudioReactRecorder extends React.Component {
     const { canvasWidth, canvasHeight } = this.props
 
     return (
-      <div className='audio-react-recorder'>
+      <div className='audio-react-recorder' style={{display: "none"}}>
         <canvas
           ref={this.canvasRef}
           width={canvasWidth}

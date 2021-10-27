@@ -183,7 +183,6 @@ class SpeechToText extends Component {
     });
     
     this.handlePauseRecord();
-    this.handleResetRecord();
   }
 
   onStop = (data) => {
@@ -228,7 +227,8 @@ class SpeechToText extends Component {
     this.setState({
       audioData: null,
       recordState: null,
-    })
+    });
+    this.handleResetRecord();
   }
 
   handleChangeLanguage = (e) => {
@@ -270,7 +270,7 @@ class SpeechToText extends Component {
               subheader="Click on start, to start recording"
             />
             <CardContent>
-                <table>
+                <table style={{marginBottom: '50px'}}>
                   <tr>
                     <td style={{color: 'white'}}> Select Language: </td>
                     <td style={{backgroundColor: 'beige'}}>
@@ -324,8 +324,8 @@ class SpeechToText extends Component {
               <div>
                 <textarea
                   id="note-textarea"
-                  placeholder="Your audio translations will show here for your reference"
-                  rows="6"
+                  placeholder="Your audio translations will be shown here....."
+                  rows="12"
                   value={this.state.noteContent}
                   onInput={this.hanldeOnInputTextArea}
                   disabled

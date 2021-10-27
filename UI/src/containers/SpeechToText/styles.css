@@ -19,8 +19,8 @@ h1 {
 .micHover {
   position: relative;
   display: block;
-  width: 80px;
-  margin: 60px auto;
+  width: 40px;
+  margin: 30px auto;
 }
 .micHover .delay1 {
   animation: waves infinite linear;
@@ -41,11 +41,11 @@ h1 {
 }
 .circle {
   display: block;
-  height: 60px;
-  width: 60px;
+  height: 30px;
+  width: 30px;
   border-radius: 50%;
   background: #0194c7;
-  margin: 10px;
+  margin: 5px;
   transition: 5s ease;
   position: absolute;
   top: 0px;

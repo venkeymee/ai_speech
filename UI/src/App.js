@@ -24,9 +24,9 @@ function App(props) {
         <Switch>
           <AppRootContext.Provider value={IntialValueObj}>
             <Route exact path="/" >
-              <Redirect to="/login" />
+              <Redirect to="/unautharized/speech-to-text" />
             </Route>
-            {/* <Route path="/unautharized" component={UnAutharizedDashboard} /> */}
+            <Route path="/unautharized" component={UnAutharizedDashboard} />
             <Route path="/login" component={Login} />
             <Route path="/s2t" render={(props) => <AppLayout {...props} />} />
             {/* <Route path='/404' render={(props) => <PageNotFound {...props} />}  /> */}
