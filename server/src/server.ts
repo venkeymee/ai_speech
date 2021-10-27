@@ -42,11 +42,10 @@ app.use('/audio', audioConvert);
 app.use('/user', userController);
 
 
-// https.createServer({
-//   key: fs.readFileSync(path.join(__dirname,'../../cert/server.key')),
-//   cert: fs.readFileSync(path.join(__dirname,'../../cert/server.cert'))
-// }, app)
-app.listen(PORT, async () => {
+https.createServer({
+  key: fs.readFileSync(path.join(__dirname,'../../cert/server.key')),
+  cert: fs.readFileSync(path.join(__dirname,'../../cert/server.cert'))
+}, app).listen(PORT, async () => {
       await dbConnection.checkConnection(); 
       Logger.info(chalk.yellow(`⚡️ [server]: Server is running at ${chalk.blue(PORT)}`));
   });
